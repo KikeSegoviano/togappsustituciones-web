@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TogApp — Sustituciones judiciales entre abogados</title>
+  <meta name="description" content="Guía práctica y gratuita: cómo cubrir un señalamiento en menos de 24 horas. Para despachos y abogados que litigan.">
+  <link rel="stylesheet" href="assets/estilo.css">
+</head>
+<body>
+  <header class="sitio">
+    <div class="contenedor">
+      <a class="logo" href="/">Tog<span>App</span></a>
+      <span class="nota">Sustituciones judiciales</span>
+    </div>
+  </header>
+
+  <main class="contenedor">
+    <section class="hero">
+      <h1>¿Un señalamiento que no puedes cubrir?</h1>
+      <p class="sub">Dos vistas a la misma hora, un juicio en otra plaza, una baja de última
+      hora. A todos los despachos que litigan les pasa — y resolverlo mal cuesta clientes.</p>
+    </section>
+
+    <section class="tarjeta">
+      <h2 style="margin-top:0">Guía gratuita: cómo resolver una sustitución en menos de 24&nbsp;horas</h2>
+      <ul>
+        <li><span class="check">✓</span>Las 3 vías para cubrir un señalamiento (y cuándo usar cada una)</li>
+        <li><span class="check">✓</span>Checklist del encargo: los 10 datos que el sustituto necesita sí o sí</li>
+        <li><span class="check">✓</span>Plantilla de mensaje de encargo lista para copiar</li>
+        <li><span class="check">✓</span>Cómo pactar honorarios de sustitución sin sorpresas</li>
+      </ul>
+
+      <div id="error" class="aviso-error">Revisa el email y marca la casilla de consentimiento para continuar.</div>
+
+      <form action="https://kikeguilabert.app.n8n.cloud/webhook/inbound-optin" method="POST">
+        <div class="campo">
+          <label for="nombre">Tu nombre</label>
+          <input type="text" id="nombre" name="nombre" autocomplete="name">
+        </div>
+        <div class="campo">
+          <label for="despacho">Despacho (opcional)</label>
+          <input type="text" id="despacho" name="despacho" autocomplete="organization">
+        </div>
+        <div class="campo">
+          <label for="email">Email profesional *</label>
+          <input type="email" id="email" name="email" required autocomplete="email">
+        </div>
+        <div class="honeypot" aria-hidden="true">
+          <label for="web2">Deja este campo vacío</label>
+          <input type="text" id="web2" name="web2" tabindex="-1" autocomplete="off">
+        </div>
+        <label class="consent">
+          <input type="checkbox" name="consent" value="si" required>
+          <span>A cambio de la guía, acepto recibir por email información de TogApp sobre
+          sustituciones judiciales. Podré darme de baja con un clic en cualquier momento.
+          He leído el <a href="privacidad.html" target="_blank">aviso de privacidad</a>. *</span>
+        </label>
+        <button class="boton" type="submit">Descargar la guía</button>
+        <p class="nota" style="margin-top:0.8rem">Acceso inmediato en tu navegador. Sin spam:
+        pocas comunicaciones y siempre con valor.</p>
+      </form>
+    </section>
+
+    <section>
+      <h2>¿Qué es TogApp?</h2>
+      <p>Un marketplace español que conecta despachos con abogados de confianza para cubrir
+      señalamientos, vistas y actuaciones puntuales en cualquier plaza. Tú mantienes a tu
+      cliente; el sustituto cubre la actuación.</p>
+    </section>
+  </main>
+
+  <footer class="sitio">
+    <div class="contenedor">
+      <p><strong>TogApp Tech Solutions S.L.</strong> — CIF B27635820 — Calle Pilar de Zaragoza 54, 2D, 28028 Madrid — info@togapp.es</p>
+      <p><a href="privacidad.html">Aviso de privacidad</a> · <a href="baja.html">Darse de baja</a></p>
+    </div>
+  </footer>
+
+  <script>
+    if (new URLSearchParams(location.search).get("error") === "1") {
+      document.getElementById("error").style.display = "block";
+    }
+  </script>
+</body>
+</html>

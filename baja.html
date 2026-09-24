@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Darse de baja — TogApp</title>
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="assets/estilo.css">
+</head>
+<body>
+  <header class="sitio">
+    <div class="contenedor">
+      <a class="logo" href="/">Tog<span>App</span></a>
+    </div>
+  </header>
+  <main class="contenedor">
+    <section class="hero">
+      <h1>Darse de baja</h1>
+      <p class="sub">Introduce tu email y dejaremos de enviarte comunicaciones de forma
+      inmediata y definitiva. Sin preguntas.</p>
+    </section>
+    <section class="tarjeta">
+      <form action="https://kikeguilabert.app.n8n.cloud/webhook/inbound-baja" method="POST">
+        <div class="campo">
+          <label for="email">Tu email</label>
+          <input type="email" id="email" name="email" required autocomplete="email">
+        </div>
+        <div class="honeypot" aria-hidden="true">
+          <label for="web2">Deja este campo vacío</label>
+          <input type="text" id="web2" name="web2" tabindex="-1" autocomplete="off">
+        </div>
+        <button class="boton" type="submit">Darme de baja</button>
+      </form>
+      <p class="nota" style="margin-top:0.9rem">También puedes ejercer tus derechos de
+      acceso, rectificación o supresión escribiendo a info@togapp.es.
+      Más información en el <a href="privacidad.html">aviso de privacidad</a>.</p>
+    </section>
+  </main>
+  <footer class="sitio">
+    <div class="contenedor">
+      <p><strong>TogApp Tech Solutions S.L.</strong> — CIF B27635820 — Calle Pilar de Zaragoza 54, 2D, 28028 Madrid — info@togapp.es</p>
+    </div>
+  </footer>
+</body>
+</html>
