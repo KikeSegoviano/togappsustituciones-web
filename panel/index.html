@@ -79,23 +79,73 @@
     }
     #tip .tip-titulo { color: #cbd5e1; margin-bottom: 0.15rem; }
     #tip .tip-clave { display: inline-block; width: 10px; height: 3px; border-radius: 2px; margin-right: 0.4rem; vertical-align: middle; }
+    /* ---------- Disposición ancha en escritorio ---------- */
+    header.sitio .contenedor, main.contenedor { max-width: 1040px; }
+    .rejilla { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 0 0.9rem; align-items: start; }
+    .rejilla > .ancho-total { grid-column: 1 / -1; }
+    /* ---------- Etiquetas, chips y medidor ---------- */
+    .badge { display: inline-block; font-size: 0.76rem; font-weight: 600; padding: 0.12rem 0.55rem; border-radius: 999px; white-space: nowrap; border: 1px solid transparent; }
+    .b-neutro { background: #f1f5f9; color: #475569; border-color: #e2e8f0; }
+    .b-cola { background: #eff6ff; color: #1e40af; border-color: #bfdbfe; }
+    .b-activo { background: #fef3c7; color: #92400e; border-color: #fde68a; }
+    .b-logro { background: #dcfce7; color: #166534; border-color: #bbf7d0; }
+    .b-fuera { background: #fee2e2; color: #991b1b; border-color: #fecaca; }
+    .chip { display: inline-block; font-size: 0.76rem; padding: 0.08rem 0.5rem; border-radius: 6px; background: var(--fondo); border: 1px solid var(--borde); color: var(--texto); white-space: nowrap; }
+    .chips { display: flex; flex-wrap: wrap; gap: 0.25rem; }
+    .medidor { display: flex; align-items: center; gap: 0.45rem; }
+    .medidor .n { font-weight: 700; color: var(--tinta); font-variant-numeric: tabular-nums; min-width: 1.6rem; text-align: right; }
+    .medidor .pista-m { flex: 1; height: 6px; border-radius: 3px; background: #cde2fb; min-width: 40px; overflow: hidden; }
+    .medidor .pista-m i { display: block; height: 100%; background: #2a78d6; border-radius: 3px; }
     /* ---------- Pestaña Despachos ---------- */
-    .filtros { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0 0.5rem; }
+    .presets { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 1rem 0 0.6rem; }
+    .presets button { background: var(--blanco); border: 1px solid var(--borde); border-radius: 999px; padding: 0.35rem 0.8rem; font-size: 0.86rem; color: var(--texto); cursor: pointer; font-family: inherit; }
+    .presets button b { color: var(--tinta); margin-left: 0.3rem; font-variant-numeric: tabular-nums; }
+    .presets button[aria-pressed="true"] { background: var(--acento); border-color: var(--acento); color: var(--blanco); }
+    .presets button[aria-pressed="true"] b { color: var(--blanco); }
+    .filtros { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0 0 0.5rem; }
     .filtros input, .filtros select { padding: 0.5rem 0.6rem; border: 1px solid var(--borde); border-radius: 8px; font-size: 0.92rem; background: var(--blanco); font-family: inherit; max-width: 100%; }
-    .filtros input { flex: 1 1 180px; min-width: 0; }
-    details.despacho { background: var(--blanco); border: 1px solid var(--borde); border-radius: 10px; margin: 0.45rem 0; }
-    details.despacho summary { cursor: pointer; padding: 0.65rem 0.9rem; }
-    details.despacho summary .meta { padding-left: 1.05rem; }
-    @media (max-width: 480px) {
+    .filtros input { flex: 1 1 200px; min-width: 0; }
+    .tabla-d { background: var(--blanco); border: 1px solid var(--borde); border-radius: 12px; overflow: hidden; }
+    .fila-d { display: grid; grid-template-columns: minmax(0, 2.3fr) minmax(0, 1fr) 120px 150px minmax(0, 1.5fr); gap: 0.8rem; align-items: center; padding: 0.6rem 0.9rem; border-top: 1px solid var(--borde); }
+    .fila-d.cab { border-top: 0; background: var(--fondo); font-size: 0.78rem; font-weight: 600; color: var(--suave); padding: 0.45rem 0.9rem; }
+    .fila-d:not(.cab) { cursor: pointer; outline: none; }
+    .fila-d:not(.cab):hover, .fila-d:not(.cab):focus-visible { background: #f8fafc; box-shadow: inset 3px 0 0 var(--acento); }
+    .fila-d .nombre { font-weight: 700; color: var(--tinta); overflow-wrap: anywhere; line-height: 1.3; }
+    .fila-d .sub-d { font-size: 0.8rem; color: var(--suave); margin-top: 0.1rem; overflow-wrap: anywhere; }
+    .fila-d .c-plaza { font-size: 0.9rem; }
+    @media (max-width: 760px) {
+      .fila-d.cab { display: none; }
+      .fila-d { grid-template-columns: minmax(0, 1fr) 110px; gap: 0.35rem 0.8rem; }
+      .fila-d .c-nombre { grid-column: 1 / -1; }
+      .fila-d .c-plaza { grid-column: 1; grid-row: 2; font-size: 0.85rem; color: var(--suave); }
+      .fila-d .c-score { grid-column: 2; grid-row: 2; }
+      .fila-d .c-estado { grid-column: 1 / -1; grid-row: 3; }
+      .fila-d .c-areas { grid-column: 1 / -1; grid-row: 4; }
       .tabs button { padding: 0.55rem 0.4rem; font-size: 0.86rem; }
       .tabla-num { font-size: 0.8rem; }
       .tabla-num th, .tabla-num td { padding: 0.35rem 0.3rem; }
     }
-    details.despacho summary strong { color: var(--tinta); overflow-wrap: anywhere; }
-    details.despacho summary .meta { display: block; margin: 0.1rem 0 0; }
-    details.despacho .cuerpo { padding: 0 0.9rem 0.8rem; font-size: 0.9rem; border-top: 1px solid var(--borde); }
-    details.despacho .cuerpo p { margin: 0.55rem 0 0; }
-    details.despacho .cuerpo b { color: var(--tinta); }
+    /* ---------- Ficha (detalle, notas y seguimiento) ---------- */
+    dialog.ficha { max-width: 720px; padding: 0; }
+    .ficha .cabecera { padding: 1.1rem 1.3rem 0.8rem; border-bottom: 1px solid var(--borde); display: flex; gap: 0.8rem; justify-content: space-between; align-items: flex-start; }
+    .ficha .cabecera h2 { margin: 0 0 0.3rem; font-size: 1.15rem; overflow-wrap: anywhere; }
+    .ficha .cerrar { background: none; border: 0; font-size: 1.5rem; line-height: 1; color: var(--suave); cursor: pointer; padding: 0 0.2rem; }
+    .ficha .cuerpo-f { padding: 0.4rem 1.3rem 1.3rem; max-height: min(74vh, 720px); overflow-y: auto; }
+    .ficha h3 { font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--suave); margin: 1.1rem 0 0.45rem; }
+    .ficha p { margin-bottom: 0.5rem; font-size: 0.92rem; }
+    .desglose .fila-g { display: grid; grid-template-columns: minmax(110px, 40%) 1fr; gap: 0.6rem; align-items: center; padding: 0.15rem 0; font-size: 0.86rem; }
+    .linea-seg { display: flex; flex-wrap: wrap; gap: 0.45rem; align-items: center; }
+    .linea-seg input[type="date"], .linea-seg input[type="text"] { padding: 0.45rem 0.55rem; border: 1px solid var(--borde); border-radius: 8px; font-size: 0.9rem; font-family: inherit; }
+    .linea-seg input[type="text"] { flex: 1 1 200px; min-width: 0; }
+    .boton.mini { padding: 0.32rem 0.65rem; font-size: 0.82rem; }
+    .ficha textarea { width: 100%; padding: 0.55rem 0.7rem; border: 1px solid var(--borde); border-radius: 8px; font-size: 0.92rem; font-family: inherit; }
+    .nota-item { border-left: 3px solid var(--borde); padding: 0.1rem 0 0.1rem 0.7rem; margin: 0.6rem 0; }
+    .nota-item .quien { font-size: 0.78rem; color: var(--suave); display: flex; gap: 0.6rem; align-items: center; }
+    .nota-item .quien button { background: none; border: 0; color: var(--acento); cursor: pointer; font-size: 0.78rem; padding: 0; }
+    .nota-item .txt { white-space: pre-wrap; font-size: 0.92rem; overflow-wrap: anywhere; }
+    .info-seg { font-size: 0.86rem; margin: 0.45rem 0 0; display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center; }
+    .ultima-nota { font-size: 0.86rem; color: var(--texto); border-left: 3px solid var(--borde); padding-left: 0.6rem; margin: 0.45rem 0 0; overflow-wrap: anywhere; }
+    .ultima-nota small { color: var(--suave); }
     #toast {
       position: fixed; left: 50%; bottom: 1.25rem; transform: translateX(-50%);
       background: var(--tinta); color: var(--blanco); padding: 0.6rem 1.1rem; border-radius: 999px;
@@ -180,6 +230,17 @@
     </form>
   </dialog>
 
+  <dialog id="dlg-ficha" class="ficha">
+    <div class="cabecera">
+      <div>
+        <h2 id="ficha-titulo"></h2>
+        <div id="ficha-meta" class="chips"></div>
+      </div>
+      <button type="button" class="cerrar" data-cerrar aria-label="Cerrar">×</button>
+    </div>
+    <div class="cuerpo-f" id="ficha-cuerpo"></div>
+  </dialog>
+
   <div id="toast" role="status"></div>
   <div id="tip" role="tooltip" hidden></div>
 
@@ -201,7 +262,7 @@
     let despachos = null;
     const pidiendo = {};
     const fallo = {};
-    const filtros = { q: "", estado: "", plaza: "", linkedin: "" };
+    const filtros = { q: "", preset: "todos", plaza: "", area: "", orden: "score" };
 
     const $ = (id) => document.getElementById(id);
 
@@ -367,9 +428,11 @@
         ...cabecera(lead, `aceptó ${hace(lead.aceptada)}`),
         el("div", { class: "texto-msg", text: lead.mensaje || "" }),
         el("p", { class: "nota", text: "Puedes añadir su nombre después de «Gracias por aceptar»." }),
+        infoLead(lead),
         el("div", { class: "acciones" },
           enlaceLinkedin(lead),
           btn("Copiar mensaje", "sec", () => copiar(lead.mensaje || "", "Mensaje")),
+          btnFicha(lead),
         ),
         el("div", { class: "acciones" },
           btn("Mensaje enviado", "", (b) => accion(lead, "mensaje_enviado", b)),
@@ -388,17 +451,52 @@
       $("dlg-optin").showModal();
     }
 
+    // Seguimiento programado y última nota, para verlos sin abrir la ficha.
+    function infoLead(lead) {
+      const f = document.createDocumentFragment();
+      if (lead.seguimiento) {
+        const vencido = datos.hoy && lead.seguimiento <= datos.hoy;
+        f.append(el("p", { class: "info-seg" },
+          el("span", { class: `badge ${vencido ? "b-activo" : "b-neutro"}`, text: `Seguimiento ${diaCorto(lead.seguimiento)}` }),
+          lead.seguimiento_nota || ""));
+      }
+      if (lead.ultima_nota) {
+        const t = lead.ultima_nota.texto;
+        f.append(el("p", { class: "ultima-nota" }, t.length > 160 ? `${t.slice(0, 160)}…` : t, " ",
+          el("small", { text: `— ${lead.ultima_nota.autor}, ${diaCorto(lead.ultima_nota.fecha)}${lead.n_notas > 1 ? ` · ${lead.n_notas} notas` : ""}` })));
+      }
+      return f;
+    }
+    const btnFicha = (lead) => btn(lead.n_notas ? `Notas (${lead.n_notas}) y seguimiento` : "Notas y seguimiento", "sec", () => abrirFicha(lead));
+
     function tarjetaCurso(lead, detalle, botones) {
       return el("article", { class: "tarjeta" },
         ...cabecera(lead, detalle),
-        el("div", { class: "acciones" }, enlaceLinkedin(lead), ...botones),
+        infoLead(lead),
+        el("div", { class: "acciones" }, enlaceLinkedin(lead), btnFicha(lead)),
+        el("div", { class: "acciones" }, ...botones),
+      );
+    }
+
+    function tarjetaSeguimiento(lead) {
+      const atraso = lead.seguimiento < datos.hoy ? `tocaba el ${diaCorto(lead.seguimiento)}` : "toca hoy";
+      return el("article", { class: "tarjeta" },
+        ...cabecera(lead, atraso),
+        el("div", { class: "texto-msg", text: lead.seguimiento_nota || "Seguimiento pendiente" }),
+        lead.ultima_nota ? el("p", { class: "ultima-nota" }, lead.ultima_nota.texto, " ",
+          el("small", { text: `— ${lead.ultima_nota.autor}, ${diaCorto(lead.ultima_nota.fecha)}` })) : null,
+        el("div", { class: "acciones" }, enlaceLinkedin(lead), btnFicha(lead)),
+        el("div", { class: "acciones" },
+          btn("Hecho", "", (b) => seguimiento(lead, null, null, true, b)),
+          btn("Posponer 3 días", "gris", (b) => seguimiento(lead, sumaDias(datos.hoy, 3), lead.seguimiento_nota, false, b)),
+        ),
       );
     }
 
     function seccion(titulo, items, render, vacio) {
       const s = el("section", {}, el("h2", { text: `${titulo} (${items.length})` }));
       if (!items.length) s.append(el("p", { class: "vacio", text: vacio }));
-      for (const it of items) s.append(render(it));
+      else s.append(el("div", { class: "rejilla" }, ...items.map(render)));
       return s;
     }
 
@@ -408,6 +506,9 @@
       let estado = `Hoy llevas ${d.enviadas_hoy} de ${d.cap} solicitudes.`;
       if (d.enviadas_hoy >= d.cap) estado += " Tope de hoy alcanzado: mañana más.";
       f.append(el("p", { class: "progreso", text: estado }));
+      if (d.seguimientos.length) {
+        f.append(seccion("Seguimientos que tocan", d.seguimientos, tarjetaSeguimiento, ""));
+      }
       if (d.por_mensaje.length) {
         f.append(seccion("Han aceptado: envíales el primer mensaje", d.por_mensaje, tarjetaMensaje, ""));
       }
@@ -514,7 +615,17 @@
       { clave: "respondieron", nombre: "Respondieron", color: "var(--serie-3)" },
     ];
     const MESES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
-    const diaCorto = (iso) => { const p = String(iso).slice(0, 10).split("-").map(Number); return `${p[2]} ${MESES[p[1] - 1]}`; };
+    // Acepta una fecha (2026-10-08) o un instante (con hora): el instante se pasa a hora local.
+    const diaCorto = (v) => {
+      const s = String(v);
+      if (s.length > 10) { const d = new Date(s); return `${d.getDate()} ${MESES[d.getMonth()]}`; }
+      const p = s.split("-").map(Number);
+      return `${p[2]} ${MESES[p[1] - 1]}`;
+    };
+    const sumaDias = (iso, n) => {
+      const p = iso.split("-").map(Number);
+      return new Date(Date.UTC(p[0], p[1] - 1, p[2] + n)).toISOString().slice(0, 10);
+    };
     const svgEl = (tag, attrs) => {
       const n = document.createElementNS("http://www.w3.org/2000/svg", tag);
       for (const [k, v] of Object.entries(attrs || {})) n.setAttribute(k, v);
@@ -658,7 +769,7 @@
       return f;
     }
 
-    // ---------- Pestaña Despachos: todo lo que ha recogido el sistema ----------
+    // ---------- Piezas comunes: estado, etiquetas, medidor ----------
     const sinTildes = (s) => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
     function tipoLinkedin(d) {
       if (!d.linkedin) return "Sin LinkedIn";
@@ -681,60 +792,237 @@
         default: return d.stage;
       }
     }
+    const CLASE_ESTADO = {
+      "En cola": "b-cola", "Solicitud enviada": "b-activo", "Aceptó": "b-activo", "Mensaje enviado": "b-activo",
+      "En conversación": "b-activo", "Permiso de email": "b-logro", "Cliente": "b-logro",
+      "No interesa": "b-fuera", "Baja": "b-fuera", "Perfil incorrecto": "b-fuera",
+    };
+    const badgeEstado = (estado) => el("span", { class: `badge ${CLASE_ESTADO[estado] || "b-neutro"}`, text: estado });
+    const chip = (texto) => el("span", { class: "chip", text: texto });
+    function medidor(n, max, texto) {
+      return el("div", { class: "medidor" },
+        el("span", { class: "n", text: texto || String(n) }),
+        el("div", { class: "pista-m" }, el("i", { style: `width:${Math.max(0, Math.min(100, (n / max) * 100)).toFixed(1)}%` })));
+    }
 
-    function fichaDespacho(d) {
-      const meta = [d.plaza, d.score != null ? `${d.score} pts` : null, estadoDe(d), tipoLinkedin(d)].filter(Boolean).join(" · ");
-      const cuerpo = el("div", { class: "cuerpo" });
-      const linea = (titulo, ...contenido) => cuerpo.append(el("p", {}, el("b", { text: `${titulo}: ` }), ...contenido));
-      if ((d.areas || []).length) linea("Áreas", d.areas.map(nombreArea).join(", "));
-      if (d.resumen) linea("Por qué esta puntuación", d.resumen);
-      if (esWeb(d.web)) linea("Web", el("a", { href: d.web, target: "_blank", rel: "noopener noreferrer", text: d.web.replace(/^https?:\/\/(www\.)?/i, "").split(/[/?]/)[0] }));
-      if (esLinkedin(d.linkedin)) linea("LinkedIn", el("a", { href: d.linkedin, target: "_blank", rel: "noopener noreferrer", text: "abrir perfil" }));
-      if (d.stage) linea("Email de contacto", d.tiene_email ? "sí (solo se usará si da su permiso)" : "no");
-      const fechas = [["Encontrado", d.descubierto], ["Solicitud enviada", d.enviada], ["Aceptó", d.aceptada], ["Mensaje enviado", d.mensaje_enviado], ["Respondió", d.respondio]]
+    // ---------- Ficha: detalle del despacho + notas + seguimiento ----------
+    async function seguimiento(lead, fecha, nota, hecho, boton) {
+      if (boton) boton.disabled = true;
+      try {
+        await rpc("panel_seguimiento", { p_lead: lead.lead_id !== undefined ? lead.lead_id : lead.id, p_fecha: fecha, p_nota: nota || null, p_hecho: !!hecho });
+        toast(hecho ? "Seguimiento hecho" : fecha ? "Seguimiento guardado" : "Seguimiento quitado");
+        await cargar();
+        return true;
+      } catch (e) {
+        toast(e.message);
+        if (boton) boton.disabled = false;
+        return false;
+      }
+    }
+
+    const DESGLOSE = [
+      ["Encaje de sus áreas", "encaje_area", 35], ["Plaza", "plaza", 25], ["Tamaño del despacho", "tamano", 20],
+      ["Actividad en sala", "actividad_judicial", 10], ["Facilidad de contacto", "contacto", 10],
+    ];
+
+    async function abrirFicha(obj) {
+      const leadId = obj.lead_id !== undefined ? obj.lead_id : obj.id;
+      $("ficha-titulo").textContent = obj.despacho || "(sin nombre)";
+      $("ficha-meta").replaceChildren(...[badgeEstado(estadoDe(obj)), obj.plaza ? chip(obj.plaza) : null,
+        obj.score != null ? chip(`${obj.score} puntos`) : null].filter(Boolean));
+      const c = $("ficha-cuerpo");
+      c.replaceChildren();
+      const titulo = (t) => c.append(el("h3", { text: t }));
+
+      if (obj.desglose) {
+        titulo("Por qué tiene esta puntuación");
+        const g = el("div", { class: "desglose" });
+        for (const [nombre, clave, max] of DESGLOSE) {
+          const v = Number(obj.desglose[clave] || 0);
+          g.append(el("div", { class: "fila-g" }, el("span", { text: nombre }), medidor(v, max, `${v}/${max}`)));
+        }
+        c.append(g);
+        if (obj.resumen) c.append(el("p", { class: "nota", style: "margin-top:0.5rem", text: obj.resumen }));
+      }
+      if ((obj.areas || []).length) {
+        titulo("Áreas de práctica");
+        c.append(el("div", { class: "chips" }, ...obj.areas.map((a) => chip(nombreArea(a)))));
+      }
+      titulo("Datos");
+      const datosDespacho = el("div", { class: "chips" });
+      if (esWeb(obj.web)) datosDespacho.append(el("a", { class: "boton sec mini", href: obj.web, target: "_blank", rel: "noopener noreferrer", text: "Abrir web" }));
+      if (esLinkedin(obj.linkedin)) datosDespacho.append(el("a", { class: "boton sec mini", href: obj.linkedin, target: "_blank", rel: "noopener noreferrer", text: `Abrir LinkedIn (${tipoLinkedin(obj) === "Perfil de persona" ? "persona" : "empresa"})` }));
+      if (obj.tiene_email !== undefined && obj.stage) datosDespacho.append(chip(obj.tiene_email ? "Hay email de contacto (solo se usa con permiso)" : "Sin email de contacto"));
+      c.append(datosDespacho);
+      const hitos = [["Encontrado", obj.descubierto], ["Solicitud enviada", obj.enviada], ["Aceptó", obj.aceptada], ["Mensaje enviado", obj.mensaje_enviado], ["Respondió", obj.respondio]]
         .filter(([, v]) => v).map(([k, v]) => `${k} el ${diaCorto(v)}`);
-      if (fechas.length) linea("Historial", fechas.join(" · "));
-      return el("details", { class: "despacho" },
-        el("summary", {}, el("strong", { text: d.despacho || "(sin nombre)" }), el("span", { class: "meta", text: meta })),
-        cuerpo);
+      if (hitos.length) c.append(el("p", { class: "nota", style: "margin-top:0.6rem", text: hitos.join(" · ") }));
+
+      const zona = el("div", {});
+      c.append(zona);
+      if (!$("dlg-ficha").open) $("dlg-ficha").showModal();
+      if (!leadId) {
+        zona.append(el("p", { class: "aviso", style: "margin-top:1rem", text: "No se encontró ningún contacto en su web, así que no entra en la cola de LinkedIn ni admite notas." }));
+        return;
+      }
+      await pintarZonaLead(leadId, zona);
+    }
+
+    async function pintarZonaLead(leadId, zona) {
+      let f;
+      try {
+        f = await rpc("panel_ficha", { p_lead: leadId });
+      } catch (e) {
+        zona.replaceChildren(el("p", { class: "error", text: e.message }));
+        return;
+      }
+      if (!f) { zona.replaceChildren(); return; }
+      const lead = { id: leadId };
+      const repintar = () => pintarZonaLead(leadId, zona);
+      const hoy = datos.hoy;
+      const nodos = [];
+
+      // Seguimiento
+      nodos.push(el("h3", { text: "Seguimiento" }));
+      nodos.push(el("p", { text: f.seguimiento
+        ? `Programado para el ${diaCorto(f.seguimiento)}${f.seguimiento_nota ? `: ${f.seguimiento_nota}` : ""}`
+        : "Sin seguimiento programado." }));
+      const fecha = el("input", { type: "date", min: hoy, "aria-label": "Fecha del seguimiento" });
+      fecha.value = f.seguimiento || "";
+      const motivo = el("input", { type: "text", maxlength: "200", placeholder: "Qué hay que hacer (opcional)", "aria-label": "Recordatorio" });
+      motivo.value = f.seguimiento_nota || "";
+      const rapido = (texto, dias) => btn(texto, "gris mini", () => { fecha.value = sumaDias(hoy, dias); });
+      nodos.push(el("div", { class: "linea-seg" }, fecha, rapido("+3 días", 3), rapido("+1 semana", 7), rapido("+1 mes", 30)));
+      const acciones = el("div", { class: "linea-seg", style: "margin-top:0.45rem" }, motivo,
+        btn("Guardar seguimiento", "mini", async (b) => {
+          if (!fecha.value) { toast("Elige una fecha"); return; }
+          if (await seguimiento(lead, fecha.value, motivo.value, false, b)) repintar();
+        }));
+      if (f.seguimiento) {
+        acciones.append(
+          btn("Hecho", "sec mini", async (b) => { if (await seguimiento(lead, null, null, true, b)) repintar(); }),
+          btn("Quitar", "gris mini", async (b) => { if (await seguimiento(lead, null, null, false, b)) repintar(); }));
+      }
+      nodos.push(acciones);
+
+      // Notas
+      nodos.push(el("h3", { text: `Notas de la conversación (${f.notas.length})` }));
+      const texto = el("textarea", { rows: "3", maxlength: "2000", placeholder: "Qué te ha dicho, objeciones, cuándo volver a escribir…", "aria-label": "Nueva nota" });
+      nodos.push(texto);
+      nodos.push(el("div", { class: "linea-seg", style: "margin-top:0.4rem" },
+        btn("Añadir nota", "mini", async (b) => {
+          if (!texto.value.trim()) { toast("Escribe la nota"); return; }
+          b.disabled = true;
+          try {
+            await rpc("panel_nota", { p_lead: leadId, p_texto: texto.value });
+            toast("Nota guardada");
+            cargar();
+            repintar();
+          } catch (e) { toast(e.message); b.disabled = false; }
+        }),
+        el("span", { class: "nota", text: "No escribas datos sensibles ni detalles de expedientes." })));
+      for (const n of f.notas) {
+        const quien = el("div", { class: "quien" }, `${n.autor} · ${diaCorto(n.fecha)}`);
+        if (n.mia) {
+          quien.append(el("button", { type: "button", text: "Borrar", onclick: async () => {
+            if (!confirm("¿Borrar esta nota?")) return;
+            try { await rpc("panel_borrar_nota", { p_nota: n.id }); cargar(); repintar(); } catch (e) { toast(e.message); }
+          } }));
+        }
+        nodos.push(el("div", { class: "nota-item" }, quien, el("div", { class: "txt", text: n.texto })));
+      }
+
+      // Mensajes preparados
+      if (f.nota || f.mensaje) {
+        const det = el("details", { class: "tabla-alt" }, el("summary", { text: "Ver los mensajes preparados" }));
+        if (f.nota) det.append(el("div", { class: "texto-msg", text: f.nota }), btn("Copiar nota", "sec mini", () => copiar(f.nota, "Nota")));
+        if (f.mensaje) det.append(el("div", { class: "texto-msg", text: f.mensaje }), btn("Copiar mensaje", "sec mini", () => copiar(f.mensaje, "Mensaje")));
+        nodos.push(det);
+      }
+      zona.replaceChildren(...nodos);
+    }
+
+    // ---------- Pestaña Despachos: todo lo que ha recogido el sistema ----------
+    const PRESETS = [
+      ["todos", "Todos", () => true],
+      ["cola", "En cola", (d) => estadoDe(d) === "En cola"],
+      ["contactados", "Contactados", (d) => !!d.enviada],
+      ["seguimiento", "Con seguimiento", (d) => !!d.seguimiento],
+      ["notas", "Con notas", (d) => d.n_notas > 0],
+      ["sinlinkedin", "Con contacto, sin LinkedIn", (d) => !!d.stage && !d.linkedin],
+      ["sincontacto", "Sin contacto", (d) => !d.stage],
+    ];
+
+    function filaDespacho(d) {
+      const dominio = esWeb(d.web) ? d.web.replace(/^https?:\/\/(www\.)?/i, "").split(/[/?]/)[0] : null;
+      const sub = [dominio, d.linkedin ? `LinkedIn de ${tipoLinkedin(d) === "Perfil de persona" ? "persona" : "empresa"}` : null,
+        d.n_notas ? `${d.n_notas} nota${d.n_notas > 1 ? "s" : ""}` : null,
+        d.seguimiento ? `seguimiento ${diaCorto(d.seguimiento)}` : null].filter(Boolean).join(" · ");
+      const areas = (d.areas || []).map(nombreArea);
+      const fila = el("div", { class: "fila-d", role: "button", tabindex: "0" },
+        el("div", { class: "c-nombre" }, el("div", { class: "nombre", text: d.despacho || "(sin nombre)" }), sub ? el("div", { class: "sub-d", text: sub }) : null),
+        el("div", { class: "c-plaza", text: d.plaza || "—" }),
+        el("div", { class: "c-score" }, d.score != null ? medidor(d.score, 100) : el("span", { class: "sub-d", text: "sin puntuar" })),
+        el("div", { class: "c-estado" }, badgeEstado(estadoDe(d))),
+        el("div", { class: "c-areas chips" }, ...areas.slice(0, 3).map(chip), areas.length > 3 ? chip(`+${areas.length - 3}`) : null));
+      fila.addEventListener("click", () => abrirFicha(d));
+      fila.addEventListener("keydown", (ev) => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); abrirFicha(d); } });
+      return fila;
     }
 
     function vistaDespachos() {
       if (!despachos) return esperando("despachos");
-      const opciones = (valores, todos) => [el("option", { value: "", text: todos }), ...valores.map((v) => el("option", { value: v, text: v }))];
-      const unicos = (fn) => [...new Set(despachos.map(fn).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
+      const opciones = (valores, todos, etiqueta) => [el("option", { value: "", text: todos }), ...valores.map((v) => el("option", { value: v, text: etiqueta ? etiqueta(v) : v }))];
+      const orden = (a, b) => a.localeCompare(b, "es");
+      const plazas = [...new Set(despachos.map((d) => d.plaza).filter(Boolean))].sort(orden);
+      const areas = [...new Set(despachos.flatMap((d) => d.areas || []))].sort((a, b) => orden(nombreArea(a), nombreArea(b)));
+
       const buscador = el("input", { type: "search", placeholder: "Buscar despacho…", "aria-label": "Buscar despacho" });
-      const selEstado = el("select", { "aria-label": "Estado" }, ...opciones(unicos(estadoDe), "Todos los estados"));
-      const selPlaza = el("select", { "aria-label": "Plaza" }, ...opciones(unicos((d) => d.plaza), "Todas las plazas"));
-      const selLinkedin = el("select", { "aria-label": "LinkedIn" }, ...opciones(unicos(tipoLinkedin), "Con o sin LinkedIn"));
-      buscador.value = filtros.q; selEstado.value = filtros.estado; selPlaza.value = filtros.plaza; selLinkedin.value = filtros.linkedin;
+      const selPlaza = el("select", { "aria-label": "Plaza" }, ...opciones(plazas, "Todas las plazas"));
+      const selArea = el("select", { "aria-label": "Área de práctica" }, ...opciones(areas, "Todas las áreas", nombreArea));
+      const selOrden = el("select", { "aria-label": "Orden" },
+        el("option", { value: "score", text: "Orden: puntuación" }), el("option", { value: "nombre", text: "Orden: nombre" }),
+        el("option", { value: "recientes", text: "Orden: más recientes" }));
+      buscador.value = filtros.q; selPlaza.value = filtros.plaza; selArea.value = filtros.area; selOrden.value = filtros.orden;
+
+      const presets = el("div", { class: "presets" });
       const contador = el("p", { class: "nota" });
-      const lista = el("div", {});
+      const lista = el("div", { class: "tabla-d" });
       const mas = btn("Mostrar 50 más", "sec", () => { limite += 50; pintarLista(); });
       let limite = 50;
 
       function pintarLista() {
         const q = sinTildes(filtros.q);
-        const vis = despachos.filter((d) =>
-          (!q || sinTildes(d.despacho).includes(q)) && (!filtros.estado || estadoDe(d) === filtros.estado) &&
-          (!filtros.plaza || d.plaza === filtros.plaza) && (!filtros.linkedin || tipoLinkedin(d) === filtros.linkedin));
-        contador.textContent = `${num(vis.length)} de ${num(despachos.length)} despachos · ordenados por puntuación`;
-        lista.replaceChildren(...vis.slice(0, limite).map(fichaDespacho));
-        if (!vis.length) lista.append(el("p", { class: "vacio", text: "Ningún despacho con esos filtros." }));
+        const resto = (d) => (!q || sinTildes(d.despacho).includes(q)) && (!filtros.plaza || d.plaza === filtros.plaza) &&
+          (!filtros.area || (d.areas || []).includes(filtros.area));
+        const base = despachos.filter(resto);
+        presets.replaceChildren(...PRESETS.map(([clave, nombre, fn]) => {
+          const b = el("button", { type: "button", "aria-pressed": String(filtros.preset === clave) }, nombre, el("b", { text: num(base.filter(fn).length) }));
+          b.addEventListener("click", () => { filtros.preset = clave; limite = 50; pintarLista(); });
+          return b;
+        }));
+        const vis = base.filter(PRESETS.find((p) => p[0] === filtros.preset)[2]);
+        if (filtros.orden === "nombre") vis.sort((a, b) => orden(a.despacho || "", b.despacho || ""));
+        if (filtros.orden === "recientes") vis.sort((a, b) => String(b.descubierto).localeCompare(String(a.descubierto)));
+        contador.textContent = `${num(vis.length)} de ${num(despachos.length)} despachos. Pulsa uno para ver su ficha.`;
+        lista.replaceChildren(
+          el("div", { class: "fila-d cab" }, el("div", { text: "Despacho" }), el("div", { text: "Plaza" }), el("div", { text: "Puntuación" }), el("div", { text: "Estado" }), el("div", { text: "Áreas" })),
+          ...vis.slice(0, limite).map(filaDespacho));
+        if (!vis.length) lista.append(el("p", { class: "vacio", style: "padding:1rem", text: "Ningún despacho con esos filtros." }));
         mas.hidden = vis.length <= limite;
       }
       const cambiar = (clave, nodo) => nodo.addEventListener(nodo === buscador ? "input" : "change", () => { filtros[clave] = nodo.value; limite = 50; pintarLista(); });
-      cambiar("q", buscador); cambiar("estado", selEstado); cambiar("plaza", selPlaza); cambiar("linkedin", selLinkedin);
+      cambiar("q", buscador); cambiar("plaza", selPlaza); cambiar("area", selArea); cambiar("orden", selOrden);
       pintarLista();
 
       const f = document.createDocumentFragment();
-      f.append(el("div", { class: "filtros" }, buscador, selEstado, selPlaza, selLinkedin), contador, lista, el("div", { class: "acciones" }, mas));
+      f.append(presets, el("div", { class: "filtros" }, buscador, selPlaza, selArea, selOrden), contador, lista, el("div", { class: "acciones" }, mas));
       return f;
     }
 
     function pintar() {
       const d = datos;
-      const cuenta = { hoy: d.nuevas.length + d.por_mensaje.length, curso: d.pendientes_aceptacion.length + d.esperando_respuesta.length + d.en_conversacion.length };
+      const cuenta = { hoy: d.nuevas.length + d.por_mensaje.length + d.seguimientos.length, curso: d.pendientes_aceptacion.length + d.esperando_respuesta.length + d.en_conversacion.length };
       const nombres = { hoy: "Hoy", curso: "En curso", resultados: "Resultados", despachos: "Despachos" };
       for (const b of document.querySelectorAll(".tabs button")) {
         const t = b.dataset.tab;
