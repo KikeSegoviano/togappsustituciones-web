@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panel — TogApp</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="../assets/estilo.css">
+  <style>
+    [hidden] { display: none !important; }
+    header.sitio .usuario { font-size: 0.85rem; color: var(--suave); display: flex; gap: 0.75rem; align-items: center; }
+    header.sitio .usuario button { background: none; border: 0; color: var(--acento); cursor: pointer; font-size: 0.85rem; padding: 0; }
+    .tabs { display: flex; gap: 0.4rem; margin: 1.25rem 0 0.5rem; border-bottom: 1px solid var(--borde); }
+    .tabs button {
+      background: none; border: 0; border-bottom: 3px solid transparent; padding: 0.6rem 0.9rem;
+      font-size: 0.98rem; font-weight: 600; color: var(--suave); cursor: pointer;
+    }
+    .tabs button[aria-selected="true"] { color: var(--acento); border-bottom-color: var(--acento); }
+    .progreso { margin: 1rem 0 0.25rem; font-weight: 600; color: var(--tinta); }
+    .tarjeta { padding: 1.1rem 1.2rem; margin: 0.9rem 0; }
+    .tarjeta h3 { margin: 0; font-size: 1.05rem; overflow-wrap: anywhere; }
+    .meta { font-size: 0.85rem; color: var(--suave); margin-bottom: 0.6rem; }
+    .texto-msg {
+      background: var(--fondo); border: 1px solid var(--borde); border-radius: 8px;
+      padding: 0.7rem 0.85rem; font-size: 0.93rem; white-space: pre-wrap; margin: 0.5rem 0;
+    }
+    .aviso { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; border-radius: 8px; padding: 0.55rem 0.8rem; font-size: 0.87rem; margin: 0.5rem 0; }
+    .acciones { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.7rem; }
+    .boton { font-size: 0.93rem; padding: 0.55rem 1rem; }
+    .boton.sec { background: var(--blanco); color: var(--acento); border: 1px solid var(--acento); }
+    .boton.sec:hover { background: #eff6ff; }
+    .boton.gris { background: var(--blanco); color: var(--suave); border: 1px solid var(--borde); font-weight: 600; }
+    .boton.gris:hover { background: var(--fondo); }
+    .boton:disabled { opacity: 0.5; cursor: wait; }
+    .vacio { color: var(--suave); padding: 1rem 0; }
+    .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.75rem; margin-top: 1rem; }
+    .tile { background: var(--blanco); border: 1px solid var(--borde); border-radius: 12px; padding: 0.9rem 1rem; }
+    .tile .num { font-size: 1.7rem; font-weight: 800; color: var(--tinta); line-height: 1.2; }
+    .tile .lbl { font-size: 0.82rem; color: var(--suave); }
+    .campo input[type="password"], .campo textarea {
+      width: 100%; padding: 0.65rem 0.75rem; border: 1px solid var(--borde); border-radius: 8px;
+      font-size: 1rem; background: var(--blanco); font-family: inherit;
+    }
+    dialog { border: 0; border-radius: 12px; padding: 1.4rem; max-width: 440px; width: calc(100% - 2rem); box-shadow: 0 10px 40px rgba(15, 23, 42, 0.25); }
+    dialog::backdrop { background: rgba(15, 23, 42, 0.45); }
+    dialog h2 { margin-top: 0; }
+    .error { color: #b91c1c; font-size: 0.9rem; min-height: 1.2rem; }
+    #toast {
+      position: fixed; left: 50%; bottom: 1.25rem; transform: translateX(-50%);
+      background: var(--tinta); color: var(--blanco); padding: 0.6rem 1.1rem; border-radius: 999px;
+      font-size: 0.9rem; opacity: 0; transition: opacity 0.2s; pointer-events: none; max-width: 90%;
+    }
+    #toast.visible { opacity: 1; }
+  </style>
+</head>
+<body>
+  <header class="sitio">
+    <div class="contenedor">
+      <a class="logo" href="./">Tog<span>App</span> · Panel</a>
+      <span class="usuario" id="usuario" hidden>
+        <span id="usuario-nombre"></span>
+        <button type="button" id="btn-pass">Cambiar contraseña</button>
+        <button type="button" id="btn-salir">Salir</button>
+      </span>
+    </div>
+  </header>
+
+  <main class="contenedor">
+    <section id="login" class="tarjeta" hidden>
+      <h2 style="margin-top:0">Entrar al panel</h2>
+      <form id="form-login">
+        <div class="campo">
+          <label for="login-email">Email</label>
+          <input type="email" id="login-email" required autocomplete="username">
+        </div>
+        <div class="campo">
+          <label for="login-pass">Contraseña</label>
+          <input type="password" id="login-pass" required autocomplete="current-password">
+        </div>
+        <p class="error" id="login-error"></p>
+        <button class="boton" type="submit">Entrar</button>
+      </form>
+    </section>
+
+    <section id="app" hidden>
+      <nav class="tabs" role="tablist">
+        <button type="button" role="tab" data-tab="hoy">Hoy</button>
+        <button type="button" role="tab" data-tab="curso">En curso</button>
+        <button type="button" role="tab" data-tab="resultados">Resultados</button>
+      </nav>
+      <div id="vista"></div>
+    </section>
+  </main>
+
+  <dialog id="dlg-optin">
+    <form id="form-optin">
+      <h2>Dio permiso para email</h2>
+      <p class="nota">Solo si la persona ha dicho expresamente que quiere recibir información por
+      email. Lo que escribas aquí es la prueba legal de su consentimiento.</p>
+      <div class="campo">
+        <label for="optin-email">Email que te ha dado</label>
+        <input type="email" id="optin-email" required>
+      </div>
+      <div class="campo">
+        <label for="optin-texto">Frase exacta con la que dio su permiso</label>
+        <textarea id="optin-texto" rows="3" required placeholder="Ej.: Sí, mándame la info a este correo"></textarea>
+      </div>
+      <p class="error" id="optin-error"></p>
+      <div class="acciones">
+        <button class="boton" type="submit">Guardar permiso</button>
+        <button class="boton gris" type="button" data-cerrar>Cancelar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="dlg-pass">
+    <form id="form-pass">
+      <h2>Cambiar contraseña</h2>
+      <div class="campo">
+        <label for="pass-nueva">Nueva contraseña (mínimo 10 caracteres)</label>
+        <input type="password" id="pass-nueva" required minlength="10" autocomplete="new-password">
+      </div>
+      <p class="error" id="pass-error"></p>
+      <div class="acciones">
+        <button class="boton" type="submit">Guardar</button>
+        <button class="boton gris" type="button" data-cerrar>Cancelar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" role="status"></div>
+
+  <script>
+    // Panel del piloto LinkedIn. Habla solo con Supabase (Auth + RPC panel_datos / panel_accion).
+    // La clave de abajo es la publicable: la seguridad está en el login + allowlist + RLS
+    // (supabase/migrations/0008_panel.sql). Nada de innerHTML: los nombres de despacho vienen
+    // de fuentes externas y se pintan siempre como texto.
+    const SB = "https://mkfywollbqgrcbkqmsbw.supabase.co";
+    const KEY = "sb_publishable_DhbGJweY0WycbXj6YtzkOg_738er8cV";
+    const LS = "togapp_panel_sesion";
+
+    let sesion = null;
+    let datos = null;
+    let tab = "hoy";
+    let optinLead = null;
+
+    const $ = (id) => document.getElementById(id);
+
+    function el(tag, props, ...hijos) {
+      const n = document.createElement(tag);
+      for (const [k, v] of Object.entries(props || {})) {
+        if (k === "class") n.className = v;
+        else if (k === "text") n.textContent = v;
+        else if (k.startsWith("on")) n.addEventListener(k.slice(2), v);
+        else n.setAttribute(k, v);
+      }
+      for (const h of hijos) if (h) n.append(h);
+      return n;
+    }
+
+    function toast(msg) {
+      const t = $("toast");
+      t.textContent = msg;
+      t.classList.add("visible");
+      clearTimeout(toast.timer);
+      toast.timer = setTimeout(() => t.classList.remove("visible"), 2200);
+    }
+
+    // ---------- Sesión ----------
+    function guardarSesion(s) {
+      sesion = { access_token: s.access_token, refresh_token: s.refresh_token, expires_at: Date.now() + s.expires_in * 1000 };
+      localStorage.setItem(LS, JSON.stringify(sesion));
+    }
+    function cerrarSesion() {
+      sesion = null;
+      datos = null;
+      localStorage.removeItem(LS);
+      mostrarLogin();
+    }
+    async function auth(path, body) {
+      const r = await fetch(`${SB}/auth/v1/${path}`, {
+        method: "POST",
+        headers: { apikey: KEY, "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(j.error_code || j.msg || "error");
+      return j;
+    }
+    async function token() {
+      if (!sesion) throw new Error("sin_sesion");
+      if (Date.now() > sesion.expires_at - 60000) {
+        guardarSesion(await auth("token?grant_type=refresh_token", { refresh_token: sesion.refresh_token }));
+      }
+      return sesion.access_token;
+    }
+    async function rpc(fn, args) {
+      const t = await token();
+      const r = await fetch(`${SB}/rest/v1/rpc/${fn}`, {
+        method: "POST",
+        headers: { apikey: KEY, Authorization: `Bearer ${t}`, "Content-Type": "application/json" },
+        body: JSON.stringify(args || {}),
+      });
+      const j = await r.json().catch(() => null);
+      if (!r.ok) throw new Error((j && j.message) || `Error ${r.status}`);
+      return j;
+    }
+
+    // ---------- Carga y acciones ----------
+    async function cargar() {
+      try {
+        datos = await rpc("panel_datos");
+      } catch (e) {
+        cerrarSesion();
+        return;
+      }
+      if (!datos.autorizado) {
+        cerrarSesion();
+        $("login-error").textContent = "Esta cuenta no tiene acceso al panel.";
+        return;
+      }
+      $("login").hidden = true;
+      $("app").hidden = false;
+      $("usuario").hidden = false;
+      $("usuario-nombre").textContent = datos.usuario || "";
+      pintar();
+    }
+
+    async function accion(lead, nombre, boton, extra) {
+      if (boton) boton.disabled = true;
+      try {
+        await rpc("panel_accion", Object.assign({ p_lead: lead.id, p_accion: nombre }, extra || {}));
+        toast("Guardado");
+        await cargar();
+        return true;
+      } catch (e) {
+        toast(e.message);
+        if (boton) boton.disabled = false;
+        return false;
+      }
+    }
+
+    async function copiar(texto, que) {
+      try {
+        await navigator.clipboard.writeText(texto);
+      } catch (e) {
+        const ta = el("textarea", {});
+        ta.value = texto;
+        document.body.append(ta);
+        ta.select();
+        document.execCommand("copy");
+        ta.remove();
+      }
+      toast(`${que} copiado`);
+    }
+
+    // ---------- Piezas de interfaz ----------
+    const esLinkedin = (u) => /^https?:\/\/([a-z]{2,3}\.)?linkedin\.com\//i.test(u || "");
+    const esWeb = (u) => /^https?:\/\//i.test(u || "");
+
+    function hace(fecha) {
+      if (!fecha) return "";
+      const dias = Math.floor((Date.now() - new Date(fecha).getTime()) / 86400000);
+      return dias <= 0 ? "hoy" : dias === 1 ? "hace 1 día" : `hace ${dias} días`;
+    }
+
+    function btn(texto, clase, fn) {
+      return el("button", { type: "button", class: `boton ${clase || ""}`.trim(), text: texto, onclick: (ev) => fn(ev.currentTarget) });
+    }
+
+    function enlaceLinkedin(lead) {
+      if (!esLinkedin(lead.linkedin)) return null;
+      return el("a", { class: "boton sec", href: lead.linkedin, target: "_blank", rel: "noopener noreferrer", text: "Abrir LinkedIn" });
+    }
+
+    function cabecera(lead, detalle) {
+      const meta = [lead.plaza, lead.score != null ? `${lead.score} pts` : null, detalle].filter(Boolean).join(" · ");
+      const titulo = el("h3", { text: lead.despacho || "(sin nombre)" });
+      const linea = el("p", { class: "meta", text: meta });
+      if (esWeb(lead.web)) {
+        linea.append(" · ", el("a", { href: lead.web, target: "_blank", rel: "noopener noreferrer", text: "web" }));
+      }
+      return [titulo, linea];
+    }
+
+    function tarjetaNueva(lead) {
+      return el("article", { class: "tarjeta" },
+        ...cabecera(lead, lead.perfil_persona ? "perfil de persona" : "página de empresa"),
+        lead.perfil_persona ? null : el("p", { class: "aviso", text: "Es la página del despacho: entra en «Personas», busca al socio o titular y envíale a él la solicitud." }),
+        el("div", { class: "texto-msg", text: lead.nota || "" }),
+        el("p", { class: "nota", text: "Añade su nombre después de «Hola». Si el perfil no es de un abogado del despacho, pulsa «Perfil incorrecto»." }),
+        el("div", { class: "acciones" },
+          enlaceLinkedin(lead),
+          btn("Copiar nota", "sec", () => copiar(lead.nota || "", "Nota")),
+        ),
+        el("div", { class: "acciones" },
+          btn("Solicitud enviada", "", (b) => accion(lead, "enviada", b)),
+          btn("Saltar hoy", "gris", (b) => accion(lead, "saltar", b)),
+          btn("Perfil incorrecto", "gris", (b) => accion(lead, "perfil_incorrecto", b)),
+        ),
+      );
+    }
+
+    function tarjetaMensaje(lead) {
+      return el("article", { class: "tarjeta" },
+        ...cabecera(lead, `aceptó ${hace(lead.aceptada)}`),
+        el("div", { class: "texto-msg", text: lead.mensaje || "" }),
+        el("p", { class: "nota", text: "Puedes añadir su nombre después de «Gracias por aceptar»." }),
+        el("div", { class: "acciones" },
+          enlaceLinkedin(lead),
+          btn("Copiar mensaje", "sec", () => copiar(lead.mensaje || "", "Mensaje")),
+        ),
+        el("div", { class: "acciones" },
+          btn("Mensaje enviado", "", (b) => accion(lead, "mensaje_enviado", b)),
+          btn("Deshacer «aceptó»", "gris", (b) => accion(lead, "deshacer", b)),
+        ),
+      );
+    }
+
+    function noInteresa(lead, b) {
+      if (confirm(`¿Marcar «${lead.despacho}» como no interesado? No se le volverá a contactar.`)) accion(lead, "no_interesa", b);
+    }
+    function abrirOptin(lead) {
+      optinLead = lead;
+      $("form-optin").reset();
+      $("optin-error").textContent = "";
+      $("dlg-optin").showModal();
+    }
+
+    function tarjetaCurso(lead, detalle, botones) {
+      return el("article", { class: "tarjeta" },
+        ...cabecera(lead, detalle),
+        el("div", { class: "acciones" }, enlaceLinkedin(lead), ...botones),
+      );
+    }
+
+    function seccion(titulo, items, render, vacio) {
+      const s = el("section", {}, el("h2", { text: `${titulo} (${items.length})` }));
+      if (!items.length) s.append(el("p", { class: "vacio", text: vacio }));
+      for (const it of items) s.append(render(it));
+      return s;
+    }
+
+    // ---------- Vistas ----------
+    function vistaHoy() {
+      const d = datos, f = document.createDocumentFragment();
+      let estado = `Hoy llevas ${d.enviadas_hoy} de ${d.cap} solicitudes.`;
+      if (d.enviadas_hoy >= d.cap) estado += " Tope de hoy alcanzado: mañana más.";
+      f.append(el("p", { class: "progreso", text: estado }));
+      if (d.por_mensaje.length) {
+        f.append(seccion("Han aceptado: envíales el primer mensaje", d.por_mensaje, tarjetaMensaje, ""));
+      }
+      f.append(seccion("Solicitudes nuevas", d.nuevas, tarjetaNueva,
+        d.enviadas_hoy >= d.cap ? "Ya has enviado las de hoy." : "No quedan contactos en la cola."));
+      return f;
+    }
+
+    function vistaCurso() {
+      const d = datos, f = document.createDocumentFragment();
+      f.append(seccion("Pendientes de aceptación", d.pendientes_aceptacion, (l) =>
+        tarjetaCurso(l, `solicitud enviada ${hace(l.enviada)}`, [
+          btn("Aceptó", "", (b) => accion(l, "acepto", b)),
+          btn("No interesa", "gris", (b) => noInteresa(l, b)),
+          btn("Deshacer envío", "gris", (b) => accion(l, "deshacer", b)),
+        ]), "Nadie pendiente de aceptar."));
+      f.append(seccion("Mensaje enviado, esperando respuesta", d.esperando_respuesta, (l) =>
+        tarjetaCurso(l, `mensaje enviado ${hace(l.mensaje_enviado)}`, [
+          btn("Respondió", "", (b) => accion(l, "respondio", b)),
+          btn("Dio permiso para email", "sec", () => abrirOptin(l)),
+          btn("No interesa", "gris", (b) => noInteresa(l, b)),
+          btn("Deshacer", "gris", (b) => accion(l, "deshacer", b)),
+        ]), "Nadie esperando respuesta."));
+      f.append(seccion("En conversación", d.en_conversacion, (l) =>
+        tarjetaCurso(l, `aceptó ${hace(l.aceptada)}`, [
+          btn("Dio permiso para email", "", () => abrirOptin(l)),
+          btn("No interesa", "gris", (b) => noInteresa(l, b)),
+          btn("Deshacer", "gris", (b) => accion(l, "deshacer", b)),
+        ]), "Ninguna conversación abierta."));
+      return f;
+    }
+
+    function vistaResultados() {
+      const r = datos.resultados;
+      const pct = (a, b) => (b ? ` (${Math.round((a / b) * 100)}%)` : "");
+      const tiles = [
+        [r.enviadas, "Solicitudes enviadas"],
+        [`${r.aceptadas}${pct(r.aceptadas, r.enviadas)}`, "Aceptadas"],
+        [r.mensajes, "Primeros mensajes enviados"],
+        [r.en_conversacion, "En conversación ahora"],
+        [r.optins, "Permisos de email"],
+        [r.no_interesa, "No interesados"],
+        [r.perfiles_incorrectos, "Perfiles incorrectos"],
+        [datos.cola_total, "Contactos en cola"],
+      ];
+      const grid = el("div", { class: "tiles" });
+      for (const [num, lbl] of tiles) grid.append(el("div", { class: "tile" }, el("div", { class: "num", text: String(num) }), el("div", { class: "lbl", text: lbl })));
+      return grid;
+    }
+
+    function pintar() {
+      const d = datos;
+      const cuenta = { hoy: d.nuevas.length + d.por_mensaje.length, curso: d.pendientes_aceptacion.length + d.esperando_respuesta.length + d.en_conversacion.length };
+      const nombres = { hoy: "Hoy", curso: "En curso", resultados: "Resultados" };
+      for (const b of document.querySelectorAll(".tabs button")) {
+        const t = b.dataset.tab;
+        b.textContent = cuenta[t] != null ? `${nombres[t]} (${cuenta[t]})` : nombres[t];
+        b.setAttribute("aria-selected", String(t === tab));
+      }
+      const vista = tab === "hoy" ? vistaHoy() : tab === "curso" ? vistaCurso() : vistaResultados();
+      $("vista").replaceChildren(vista);
+    }
+
+    function mostrarLogin() {
+      $("app").hidden = true;
+      $("usuario").hidden = true;
+      $("login").hidden = false;
+    }
+
+    // ---------- Eventos ----------
+    for (const b of document.querySelectorAll(".tabs button")) {
+      b.addEventListener("click", () => { tab = b.dataset.tab; pintar(); });
+    }
+    for (const b of document.querySelectorAll("[data-cerrar]")) {
+      b.addEventListener("click", () => b.closest("dialog").close());
+    }
+    $("btn-salir").addEventListener("click", cerrarSesion);
+    $("btn-pass").addEventListener("click", () => { $("form-pass").reset(); $("pass-error").textContent = ""; $("dlg-pass").showModal(); });
+
+    $("form-login").addEventListener("submit", async (ev) => {
+      ev.preventDefault();
+      $("login-error").textContent = "";
+      try {
+        guardarSesion(await auth("token?grant_type=password", { email: $("login-email").value.trim(), password: $("login-pass").value }));
+        $("login-pass").value = "";
+        await cargar();
+      } catch (e) {
+        $("login-error").textContent = e.message === "invalid_credentials" ? "Email o contraseña incorrectos." : "No se ha podido entrar. Inténtalo de nuevo.";
+      }
+    });
+
+    $("form-optin").addEventListener("submit", async (ev) => {
+      ev.preventDefault();
+      const boton = ev.submitter;
+      if (boton) boton.disabled = true;
+      try {
+        await rpc("panel_accion", { p_lead: optinLead.id, p_accion: "optin", p_email: $("optin-email").value, p_texto: $("optin-texto").value });
+        $("dlg-optin").close();
+        toast("Permiso guardado");
+        await cargar();
+      } catch (e) {
+        $("optin-error").textContent = e.message;
+      }
+      if (boton) boton.disabled = false;
+    });
+
+    $("form-pass").addEventListener("submit", async (ev) => {
+      ev.preventDefault();
+      try {
+        const r = await fetch(`${SB}/auth/v1/user`, {
+          method: "PUT",
+          headers: { apikey: KEY, Authorization: `Bearer ${await token()}`, "Content-Type": "application/json" },
+          body: JSON.stringify({ password: $("pass-nueva").value }),
+        });
+        if (!r.ok) throw new Error();
+        $("dlg-pass").close();
+        toast("Contraseña cambiada");
+      } catch (e) {
+        $("pass-error").textContent = "No se ha podido cambiar. Prueba con otra contraseña más larga.";
+      }
+    });
+
+    // Al volver a la pestaña se recarga, para ver lo que haya marcado la otra persona.
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden && sesion && !document.querySelector("dialog[open]")) cargar();
+    });
+
+    // ---------- Arranque ----------
+    try { sesion = JSON.parse(localStorage.getItem(LS) || "null"); } catch (e) { sesion = null; }
+    if (sesion) cargar(); else mostrarLogin();
+  </script>
+</body>
+</html>
