@@ -10,10 +10,10 @@
     [hidden] { display: none !important; }
     header.sitio .usuario { font-size: 0.85rem; color: var(--suave); display: flex; gap: 0.75rem; align-items: center; }
     header.sitio .usuario button { background: none; border: 0; color: var(--acento); cursor: pointer; font-size: 0.85rem; padding: 0; }
-    .tabs { display: flex; gap: 0.4rem; margin: 1.25rem 0 0.5rem; border-bottom: 1px solid var(--borde); }
+    .tabs { display: flex; gap: 0.2rem; margin: 1.25rem 0 0.5rem; border-bottom: 1px solid var(--borde); overflow-x: auto; }
     .tabs button {
-      background: none; border: 0; border-bottom: 3px solid transparent; padding: 0.6rem 0.9rem;
-      font-size: 0.98rem; font-weight: 600; color: var(--suave); cursor: pointer;
+      background: none; border: 0; border-bottom: 3px solid transparent; padding: 0.6rem 0.7rem;
+      font-size: 0.95rem; font-weight: 600; color: var(--suave); cursor: pointer; white-space: nowrap;
     }
     .tabs button[aria-selected="true"] { color: var(--acento); border-bottom-color: var(--acento); }
     .progreso { margin: 1rem 0 0.25rem; font-weight: 600; color: var(--tinta); }
@@ -45,6 +45,57 @@
     dialog::backdrop { background: rgba(15, 23, 42, 0.45); }
     dialog h2 { margin-top: 0; }
     .error { color: #b91c1c; font-size: 0.9rem; min-height: 1.2rem; }
+    /* ---------- Gráficos (método y paleta validados con la skill dataviz) ---------- */
+    .viz { --serie-1: #2a78d6; --serie-2: #eb6834; --serie-3: #1baf7a; --rejilla: #e1e0d9; --eje: #c3c2b7; }
+    .grafico { background: var(--blanco); border: 1px solid var(--borde); border-radius: 12px; padding: 1rem 1.1rem; margin: 0.9rem 0; }
+    .grafico h3 { margin: 0 0 0.15rem; }
+    .grafico .sub { font-size: 0.85rem; color: var(--suave); margin-bottom: 0.8rem; }
+    .barras .fila { display: grid; grid-template-columns: minmax(96px, 36%) 1fr; gap: 0.6rem; align-items: center; padding: 0.22rem 0; border-radius: 6px; outline: none; }
+    .barras .fila:hover, .barras .fila:focus-visible { background: var(--fondo); }
+    .barras .lbl { font-size: 0.86rem; color: var(--texto); overflow-wrap: anywhere; line-height: 1.25; }
+    .barras .pista { display: flex; align-items: center; gap: 0.45rem; min-width: 0; }
+    .barras .barra { height: 16px; background: var(--serie-1); border-radius: 0 4px 4px 0; min-width: 2px; flex: 0 0 auto; }
+    .barras .val { font-size: 0.84rem; color: var(--tinta); font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .barras .val small { color: var(--suave); font-weight: 400; font-size: 0.8rem; }
+    .leyenda { display: flex; flex-wrap: wrap; gap: 0.3rem 1rem; font-size: 0.84rem; color: var(--texto); margin-bottom: 0.4rem; }
+    .leyenda i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 0.35rem; }
+    .lienzo { min-height: 220px; }
+    .lienzo svg { display: block; }
+    .lienzo .eje { font-size: 11px; fill: var(--suave); font-variant-numeric: tabular-nums; }
+    .lienzo .cap { font-size: 11px; fill: var(--tinta); font-weight: 600; }
+    .lienzo .banda { fill: transparent; outline: none; }
+    .lienzo .banda:hover, .lienzo .banda:focus { fill: rgba(15, 23, 42, 0.05); }
+    details.tabla-alt { margin-top: 0.6rem; font-size: 0.86rem; }
+    details.tabla-alt summary { cursor: pointer; color: var(--acento); }
+    .tabla-num { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-top: 0.4rem; }
+    .tabla-num th, .tabla-num td { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--borde); text-align: right; font-variant-numeric: tabular-nums; }
+    .tabla-num th:first-child, .tabla-num td:first-child { text-align: left; }
+    .tabla-num th { color: var(--suave); font-weight: 600; font-size: 0.8rem; }
+    .tabla-num tr.grupo td { background: var(--fondo); font-weight: 700; color: var(--tinta); text-align: left; }
+    .desliza { overflow-x: auto; }
+    #tip {
+      position: fixed; z-index: 20; background: var(--tinta); color: var(--blanco); border-radius: 8px;
+      padding: 0.45rem 0.65rem; font-size: 0.82rem; pointer-events: none; max-width: 260px; line-height: 1.35;
+    }
+    #tip .tip-titulo { color: #cbd5e1; margin-bottom: 0.15rem; }
+    #tip .tip-clave { display: inline-block; width: 10px; height: 3px; border-radius: 2px; margin-right: 0.4rem; vertical-align: middle; }
+    /* ---------- Pestaña Despachos ---------- */
+    .filtros { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0 0.5rem; }
+    .filtros input, .filtros select { padding: 0.5rem 0.6rem; border: 1px solid var(--borde); border-radius: 8px; font-size: 0.92rem; background: var(--blanco); font-family: inherit; max-width: 100%; }
+    .filtros input { flex: 1 1 180px; min-width: 0; }
+    details.despacho { background: var(--blanco); border: 1px solid var(--borde); border-radius: 10px; margin: 0.45rem 0; }
+    details.despacho summary { cursor: pointer; padding: 0.65rem 0.9rem; }
+    details.despacho summary .meta { padding-left: 1.05rem; }
+    @media (max-width: 480px) {
+      .tabs button { padding: 0.55rem 0.4rem; font-size: 0.86rem; }
+      .tabla-num { font-size: 0.8rem; }
+      .tabla-num th, .tabla-num td { padding: 0.35rem 0.3rem; }
+    }
+    details.despacho summary strong { color: var(--tinta); overflow-wrap: anywhere; }
+    details.despacho summary .meta { display: block; margin: 0.1rem 0 0; }
+    details.despacho .cuerpo { padding: 0 0.9rem 0.8rem; font-size: 0.9rem; border-top: 1px solid var(--borde); }
+    details.despacho .cuerpo p { margin: 0.55rem 0 0; }
+    details.despacho .cuerpo b { color: var(--tinta); }
     #toast {
       position: fixed; left: 50%; bottom: 1.25rem; transform: translateX(-50%);
       background: var(--tinta); color: var(--blanco); padding: 0.6rem 1.1rem; border-radius: 999px;
@@ -87,6 +138,7 @@
         <button type="button" role="tab" data-tab="hoy">Hoy</button>
         <button type="button" role="tab" data-tab="curso">En curso</button>
         <button type="button" role="tab" data-tab="resultados">Resultados</button>
+        <button type="button" role="tab" data-tab="despachos">Despachos</button>
       </nav>
       <div id="vista"></div>
     </section>
@@ -129,6 +181,7 @@
   </dialog>
 
   <div id="toast" role="status"></div>
+  <div id="tip" role="tooltip" hidden></div>
 
   <script>
     // Panel del piloto LinkedIn. Habla solo con Supabase (Auth + RPC panel_datos / panel_accion).
@@ -143,6 +196,12 @@
     let datos = null;
     let tab = "hoy";
     let optinLead = null;
+    // Datos pesados: se piden solo al abrir su pestaña y se descartan cuando cambia algo.
+    let metricas = null;
+    let despachos = null;
+    const pidiendo = {};
+    const fallo = {};
+    const filtros = { q: "", estado: "", plaza: "", linkedin: "" };
 
     const $ = (id) => document.getElementById(id);
 
@@ -210,6 +269,8 @@
     async function cargar() {
       try {
         datos = await rpc("panel_datos");
+        metricas = null;
+        despachos = null;
       } catch (e) {
         cerrarSesion();
         return;
@@ -379,35 +440,310 @@
       return f;
     }
 
+    // ---------- Carga perezosa de métricas y despachos ----------
+    async function pedir(que) {
+      if (pidiendo[que]) return;
+      pidiendo[que] = true;
+      fallo[que] = false;
+      try {
+        const d = await rpc(que === "metricas" ? "panel_metricas" : "panel_despachos");
+        if (que === "metricas") metricas = d; else despachos = d;
+      } catch (e) {
+        fallo[que] = true;
+        toast(e.message);
+      }
+      pidiendo[que] = false;
+      if (datos) pintar();
+    }
+    function esperando(que) {
+      if (fallo[que]) {
+        return el("div", { class: "vacio" }, "No se han podido cargar los datos. ",
+          btn("Reintentar", "sec", () => { fallo[que] = false; pintar(); }));
+      }
+      pedir(que);
+      return el("p", { class: "vacio", text: "Cargando…" });
+    }
+
+    // ---------- Gráficos ----------
+    const num = (n) => Number(n || 0).toLocaleString("es-ES");
+    const pct = (a, b) => (b ? `${Math.round((a / b) * 100)}%` : "–");
+    const tip = $("tip");
+
+    function mostrarTip(ev, filas, titulo) {
+      tip.replaceChildren();
+      if (titulo) tip.append(el("div", { class: "tip-titulo", text: titulo }));
+      for (const f of filas) {
+        tip.append(el("div", {},
+          f.color ? el("span", { class: "tip-clave", style: `background:${f.color}` }) : null,
+          el("strong", { text: f.valor }), ` ${f.etiqueta}`));
+      }
+      tip.hidden = false;
+      const r = ev.currentTarget.getBoundingClientRect();
+      const conPuntero = ev.type !== "focus" && ev.clientX != null;
+      const x = conPuntero ? ev.clientX : r.left + r.width / 2;
+      const y = conPuntero ? ev.clientY : r.top;
+      tip.style.left = `${Math.max(8, Math.min(x + 12, window.innerWidth - tip.offsetWidth - 8))}px`;
+      tip.style.top = `${Math.max(8, y - tip.offsetHeight - 10)}px`;
+    }
+    function conTip(nodo, fn) {
+      nodo.setAttribute("tabindex", "0");
+      for (const t of ["pointerenter", "pointermove", "focus"]) nodo.addEventListener(t, (ev) => mostrarTip(ev, ...fn()));
+      for (const t of ["pointerleave", "blur"]) nodo.addEventListener(t, () => { tip.hidden = true; });
+    }
+
+    // Barras horizontales de una sola serie (un color): cada valor va escrito en la punta.
+    function graficoBarras(titulo, sub, items) {
+      const max = Math.max(1, ...items.map((i) => i.n));
+      const cont = el("div", { class: "barras" });
+      for (const it of items) {
+        const val = el("span", { class: "val", text: num(it.n) });
+        if (it.extra) val.append(" ", el("small", { text: it.extra }));
+        const fila = el("div", { class: "fila" },
+          el("div", { class: "lbl", text: it.nombre }),
+          el("div", { class: "pista" },
+            el("div", { class: "barra", style: `width: calc((100% - 7.5rem) * ${(it.n / max).toFixed(4)})` }), val));
+        conTip(fila, () => [[{ valor: num(it.n), etiqueta: it.extra ? `${it.nombre} · ${it.extra}` : it.nombre }]]);
+        cont.append(fila);
+      }
+      return el("section", { class: "grafico viz" }, el("h3", { text: titulo }), sub ? el("p", { class: "sub", text: sub }) : null, cont);
+    }
+
+    const SERIES = [
+      { clave: "enviadas", nombre: "Solicitudes enviadas", color: "var(--serie-1)" },
+      { clave: "aceptadas", nombre: "Aceptadas", color: "var(--serie-2)" },
+      { clave: "respondieron", nombre: "Respondieron", color: "var(--serie-3)" },
+    ];
+    const MESES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+    const diaCorto = (iso) => { const p = String(iso).slice(0, 10).split("-").map(Number); return `${p[2]} ${MESES[p[1] - 1]}`; };
+    const svgEl = (tag, attrs) => {
+      const n = document.createElementNS("http://www.w3.org/2000/svg", tag);
+      for (const [k, v] of Object.entries(attrs || {})) n.setAttribute(k, v);
+      return n;
+    };
+
+    // Columnas agrupadas por semana (3 series, un solo eje). Se dibuja al ancho real del contenedor.
+    function graficoSemanal(semanas) {
+      const caja = el("div", { class: "lienzo" });
+      function dibujar() {
+        const W = Math.max(280, Math.floor(caja.clientWidth)), H = 220;
+        const m = { l: 30, r: 6, t: 16, b: 26 };
+        const pw = W - m.l - m.r, ph = H - m.t - m.b, base = m.t + ph;
+        const maxV = Math.max(4, ...semanas.flatMap((s) => SERIES.map((x) => s[x.clave])));
+        const paso = Math.ceil(maxV / 4), tope = paso * 4;
+        const y = (v) => m.t + ph - (v / tope) * ph;
+        const svg = svgEl("svg", { width: W, height: H, role: "img", "aria-label": "Actividad por semana" });
+        for (let i = 0; i <= 4; i++) {
+          const v = i * paso;
+          svg.append(svgEl("line", { x1: m.l, x2: W - m.r, y1: y(v), y2: y(v), style: `stroke: var(${i === 0 ? "--eje" : "--rejilla"}); stroke-width: 1` }));
+          const t = svgEl("text", { x: m.l - 6, y: y(v) + 4, "text-anchor": "end", class: "eje" });
+          t.textContent = num(v);
+          svg.append(t);
+        }
+        const bw = pw / semanas.length;
+        const cw = Math.max(4, Math.min(14, (bw - 10) / 3 - 2));
+        semanas.forEach((s, i) => {
+          const x0 = m.l + i * bw, gx = x0 + (bw - (3 * cw + 4)) / 2, ultima = i === semanas.length - 1;
+          SERIES.forEach((ser, k) => {
+            const v = s[ser.clave];
+            if (!v) return;
+            const h = (v / tope) * ph, x = gx + k * (cw + 2), yy = y(v), r = Math.min(4, h, cw / 2);
+            svg.append(svgEl("path", {
+              d: `M${x},${base} V${yy + r} Q${x},${yy} ${x + r},${yy} H${x + cw - r} Q${x + cw},${yy} ${x + cw},${yy + r} V${base} Z`,
+              style: `fill: ${ser.color}`,
+            }));
+            if (ultima) {
+              const t = svgEl("text", { x: x + cw / 2, y: yy - 4, "text-anchor": "middle", class: "cap" });
+              t.textContent = num(v);
+              svg.append(t);
+            }
+          });
+          if (bw >= 40 || i % 2 === (semanas.length - 1) % 2) {
+            const tx = svgEl("text", { x: x0 + bw / 2, y: H - 8, "text-anchor": "middle", class: "eje" });
+            tx.textContent = diaCorto(s.lunes);
+            svg.append(tx);
+          }
+          const banda = svgEl("rect", { x: x0, y: m.t, width: bw, height: ph, class: "banda" });
+          conTip(banda, () => [SERIES.map((ser) => ({ color: ser.color, valor: num(s[ser.clave]), etiqueta: ser.nombre })), `Semana del ${diaCorto(s.lunes)}`]);
+          svg.append(banda);
+        });
+        caja.replaceChildren(svg);
+      }
+      new ResizeObserver(dibujar).observe(caja);
+
+      const tabla = el("table", { class: "tabla-num" },
+        el("tr", {}, el("th", { text: "Semana del" }), ...SERIES.map((s) => el("th", { text: s.nombre }))));
+      for (const s of semanas) tabla.append(el("tr", {}, el("td", { text: diaCorto(s.lunes) }), ...SERIES.map((x) => el("td", { text: num(s[x.clave]) }))));
+      return el("section", { class: "grafico viz" },
+        el("h3", { text: "Actividad por semana" }),
+        el("p", { class: "sub", text: "Últimas 8 semanas. Cada cosa cuenta en la semana en que ocurrió." }),
+        el("div", { class: "leyenda" }, ...SERIES.map((s) => el("span", {}, el("i", { style: `background:${s.color}` }), s.nombre))),
+        caja,
+        el("details", { class: "tabla-alt" }, el("summary", { text: "Ver como tabla" }), el("div", { class: "desliza" }, tabla)));
+    }
+
+    function tablaSegmentos(segmentos) {
+      const tabla = el("table", { class: "tabla-num" },
+        el("tr", {}, el("th", { text: "Segmento" }), el("th", { text: "Enviadas" }), el("th", { text: "Aceptadas" }),
+          el("th", { text: "% acept." }), el("th", { text: "Respond." }), el("th", { text: "% resp." })));
+      // Dentro de cada grupo, orden con sentido (no alfabético).
+      const ORDEN = ["Perfil de persona", "Página de empresa", "85 o más", "70 a 84", "Menos de 70", "Madrid capital", "Resto de la provincia", "Menciona sus áreas", "Genérica"];
+      const grupos = [...new Set(segmentos.map((s) => s.grupo))];
+      segmentos = [...segmentos].sort((a, b) => grupos.indexOf(a.grupo) - grupos.indexOf(b.grupo) || ORDEN.indexOf(a.segmento) - ORDEN.indexOf(b.segmento));
+      let grupo = null;
+      for (const s of segmentos) {
+        if (s.grupo !== grupo) {
+          grupo = s.grupo;
+          tabla.append(el("tr", { class: "grupo" }, el("td", { colspan: "6", text: grupo })));
+        }
+        tabla.append(el("tr", {}, el("td", { text: s.segmento }), el("td", { text: num(s.enviadas) }), el("td", { text: num(s.aceptadas) }),
+          el("td", { text: pct(s.aceptadas, s.enviadas) }), el("td", { text: num(s.respondieron) }), el("td", { text: pct(s.respondieron, s.enviadas) })));
+      }
+      return el("section", { class: "grafico" },
+        el("h3", { text: "¿Qué funciona mejor?" }),
+        el("p", { class: "sub", text: "Aceptación y respuesta según el tipo de contacto. Con pocas solicitudes las diferencias no son fiables: espera a tener unas 30 por fila antes de sacar conclusiones." }),
+        el("div", { class: "desliza" }, tabla));
+    }
+
+    const AREAS = { extranjeria: "extranjería", proteccion_datos: "protección de datos", propiedad_intelectual: "propiedad intelectual" };
+    const nombreArea = (a) => { const t = AREAS[a] || a; return t.charAt(0).toUpperCase() + t.slice(1); };
+
     function vistaResultados() {
-      const r = datos.resultados;
-      const pct = (a, b) => (b ? ` (${Math.round((a / b) * 100)}%)` : "");
+      const r = datos.resultados, f = document.createDocumentFragment();
       const tiles = [
-        [r.enviadas, "Solicitudes enviadas"],
-        [`${r.aceptadas}${pct(r.aceptadas, r.enviadas)}`, "Aceptadas"],
-        [r.mensajes, "Primeros mensajes enviados"],
-        [r.en_conversacion, "En conversación ahora"],
-        [r.optins, "Permisos de email"],
-        [r.no_interesa, "No interesados"],
-        [r.perfiles_incorrectos, "Perfiles incorrectos"],
-        [datos.cola_total, "Contactos en cola"],
+        [num(r.enviadas), "Solicitudes enviadas"],
+        [r.enviadas ? `${num(r.aceptadas)} (${pct(r.aceptadas, r.enviadas)})` : "0", "Aceptadas"],
+        [num(r.mensajes), "Primeros mensajes enviados"],
+        [num(r.en_conversacion), "En conversación ahora"],
+        [num(r.optins), "Permisos de email"],
+        [num(r.no_interesa), "No interesados"],
+        [num(r.perfiles_incorrectos), "Perfiles incorrectos"],
+        [num(datos.cola_total), "Contactos en cola"],
       ];
       const grid = el("div", { class: "tiles" });
-      for (const [num, lbl] of tiles) grid.append(el("div", { class: "tile" }, el("div", { class: "num", text: String(num) }), el("div", { class: "lbl", text: lbl })));
-      return grid;
+      for (const [valor, lbl] of tiles) grid.append(el("div", { class: "tile" }, el("div", { class: "num", text: valor }), el("div", { class: "lbl", text: lbl })));
+      f.append(grid);
+      if (!metricas) { f.append(esperando("metricas")); return f; }
+
+      const c = metricas.embudo_contacto, e = metricas.embudo_datos;
+      if (!c.enviadas) {
+        f.append(el("p", { class: "aviso", text: "Todavía no hay solicitudes marcadas como enviadas. Los gráficos de contacto se irán llenando según las vayáis marcando en «Hoy»." }));
+      }
+      const de = (n) => (c.enviadas ? `${pct(n, c.enviadas)} de las enviadas` : "");
+      f.append(el("h2", { text: "Contacto por LinkedIn" }));
+      f.append(graficoBarras("Embudo de contacto", "De la solicitud al permiso para escribirles por email.", [
+        { nombre: "Solicitudes enviadas", n: c.enviadas },
+        { nombre: "Aceptaron", n: c.aceptadas, extra: de(c.aceptadas) },
+        { nombre: "Primer mensaje enviado", n: c.mensajes, extra: de(c.mensajes) },
+        { nombre: "Respondieron", n: c.respondieron, extra: de(c.respondieron) },
+        { nombre: "Dieron permiso de email", n: c.optins, extra: de(c.optins) },
+      ]));
+      f.append(graficoSemanal(metricas.semanal));
+      f.append(tablaSegmentos(metricas.segmentos));
+
+      const deTotal = (n) => `${pct(n, e.despachos)} del total`;
+      f.append(el("h2", { text: "La base de datos" }));
+      f.append(graficoBarras("De despachos encontrados a contactos listos", "Lo que ha ido filtrando el sistema automático.", [
+        { nombre: "Despachos encontrados", n: e.despachos },
+        { nombre: "Con página web", n: e.con_web, extra: deTotal(e.con_web) },
+        { nombre: "Con algún contacto", n: e.con_contacto, extra: deTotal(e.con_contacto) },
+        { nombre: "Con LinkedIn", n: e.con_linkedin, extra: deTotal(e.con_linkedin) },
+        { nombre: "Listos para contactar (50 puntos o más)", n: e.contactables, extra: deTotal(e.contactables) },
+      ]));
+      f.append(graficoBarras("Puntuación de los contactos", "Cuántos contactos hay en cada tramo (de 0 a 100).", metricas.scores));
+      const otras = metricas.plazas.filter((p) => p.nombre === "Otras plazas");
+      f.append(graficoBarras("Despachos por plaza", "Las 8 plazas con más despachos y el resto agrupado.",
+        metricas.plazas.filter((p) => p.nombre !== "Otras plazas").concat(otras)));
+      f.append(graficoBarras("Áreas de práctica más frecuentes", "Detectadas en las webs; un despacho puede tener varias.",
+        metricas.areas.map((a) => ({ nombre: nombreArea(a.nombre), n: a.n }))));
+      return f;
+    }
+
+    // ---------- Pestaña Despachos: todo lo que ha recogido el sistema ----------
+    const sinTildes = (s) => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+    function tipoLinkedin(d) {
+      if (!d.linkedin) return "Sin LinkedIn";
+      return /linkedin\.com\/in\//i.test(d.linkedin) ? "Perfil de persona" : "Página de empresa";
+    }
+    function estadoDe(d) {
+      switch (d.stage) {
+        case null: case undefined: return d.web ? "Sin contacto encontrado" : "Sin página web";
+        case "qualified":
+          if (d.marcado) return "Perfil incorrecto";
+          if (!d.linkedin) return "Sin LinkedIn";
+          return d.score < 50 ? "Puntuación baja" : "En cola";
+        case "connect_sent": return "Solicitud enviada";
+        case "connected": return d.mensaje_enviado ? "Mensaje enviado" : "Aceptó";
+        case "in_conversation": return "En conversación";
+        case "opted_in": case "nurturing": return "Permiso de email";
+        case "won": return "Cliente";
+        case "lost": return "No interesa";
+        case "suppressed": return "Baja";
+        default: return d.stage;
+      }
+    }
+
+    function fichaDespacho(d) {
+      const meta = [d.plaza, d.score != null ? `${d.score} pts` : null, estadoDe(d), tipoLinkedin(d)].filter(Boolean).join(" · ");
+      const cuerpo = el("div", { class: "cuerpo" });
+      const linea = (titulo, ...contenido) => cuerpo.append(el("p", {}, el("b", { text: `${titulo}: ` }), ...contenido));
+      if ((d.areas || []).length) linea("Áreas", d.areas.map(nombreArea).join(", "));
+      if (d.resumen) linea("Por qué esta puntuación", d.resumen);
+      if (esWeb(d.web)) linea("Web", el("a", { href: d.web, target: "_blank", rel: "noopener noreferrer", text: d.web.replace(/^https?:\/\/(www\.)?/i, "").split(/[/?]/)[0] }));
+      if (esLinkedin(d.linkedin)) linea("LinkedIn", el("a", { href: d.linkedin, target: "_blank", rel: "noopener noreferrer", text: "abrir perfil" }));
+      if (d.stage) linea("Email de contacto", d.tiene_email ? "sí (solo se usará si da su permiso)" : "no");
+      const fechas = [["Encontrado", d.descubierto], ["Solicitud enviada", d.enviada], ["Aceptó", d.aceptada], ["Mensaje enviado", d.mensaje_enviado], ["Respondió", d.respondio]]
+        .filter(([, v]) => v).map(([k, v]) => `${k} el ${diaCorto(v)}`);
+      if (fechas.length) linea("Historial", fechas.join(" · "));
+      return el("details", { class: "despacho" },
+        el("summary", {}, el("strong", { text: d.despacho || "(sin nombre)" }), el("span", { class: "meta", text: meta })),
+        cuerpo);
+    }
+
+    function vistaDespachos() {
+      if (!despachos) return esperando("despachos");
+      const opciones = (valores, todos) => [el("option", { value: "", text: todos }), ...valores.map((v) => el("option", { value: v, text: v }))];
+      const unicos = (fn) => [...new Set(despachos.map(fn).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
+      const buscador = el("input", { type: "search", placeholder: "Buscar despacho…", "aria-label": "Buscar despacho" });
+      const selEstado = el("select", { "aria-label": "Estado" }, ...opciones(unicos(estadoDe), "Todos los estados"));
+      const selPlaza = el("select", { "aria-label": "Plaza" }, ...opciones(unicos((d) => d.plaza), "Todas las plazas"));
+      const selLinkedin = el("select", { "aria-label": "LinkedIn" }, ...opciones(unicos(tipoLinkedin), "Con o sin LinkedIn"));
+      buscador.value = filtros.q; selEstado.value = filtros.estado; selPlaza.value = filtros.plaza; selLinkedin.value = filtros.linkedin;
+      const contador = el("p", { class: "nota" });
+      const lista = el("div", {});
+      const mas = btn("Mostrar 50 más", "sec", () => { limite += 50; pintarLista(); });
+      let limite = 50;
+
+      function pintarLista() {
+        const q = sinTildes(filtros.q);
+        const vis = despachos.filter((d) =>
+          (!q || sinTildes(d.despacho).includes(q)) && (!filtros.estado || estadoDe(d) === filtros.estado) &&
+          (!filtros.plaza || d.plaza === filtros.plaza) && (!filtros.linkedin || tipoLinkedin(d) === filtros.linkedin));
+        contador.textContent = `${num(vis.length)} de ${num(despachos.length)} despachos · ordenados por puntuación`;
+        lista.replaceChildren(...vis.slice(0, limite).map(fichaDespacho));
+        if (!vis.length) lista.append(el("p", { class: "vacio", text: "Ningún despacho con esos filtros." }));
+        mas.hidden = vis.length <= limite;
+      }
+      const cambiar = (clave, nodo) => nodo.addEventListener(nodo === buscador ? "input" : "change", () => { filtros[clave] = nodo.value; limite = 50; pintarLista(); });
+      cambiar("q", buscador); cambiar("estado", selEstado); cambiar("plaza", selPlaza); cambiar("linkedin", selLinkedin);
+      pintarLista();
+
+      const f = document.createDocumentFragment();
+      f.append(el("div", { class: "filtros" }, buscador, selEstado, selPlaza, selLinkedin), contador, lista, el("div", { class: "acciones" }, mas));
+      return f;
     }
 
     function pintar() {
       const d = datos;
       const cuenta = { hoy: d.nuevas.length + d.por_mensaje.length, curso: d.pendientes_aceptacion.length + d.esperando_respuesta.length + d.en_conversacion.length };
-      const nombres = { hoy: "Hoy", curso: "En curso", resultados: "Resultados" };
+      const nombres = { hoy: "Hoy", curso: "En curso", resultados: "Resultados", despachos: "Despachos" };
       for (const b of document.querySelectorAll(".tabs button")) {
         const t = b.dataset.tab;
         b.textContent = cuenta[t] != null ? `${nombres[t]} (${cuenta[t]})` : nombres[t];
         b.setAttribute("aria-selected", String(t === tab));
       }
-      const vista = tab === "hoy" ? vistaHoy() : tab === "curso" ? vistaCurso() : vistaResultados();
-      $("vista").replaceChildren(vista);
+      tip.hidden = true;
+      const vistas = { hoy: vistaHoy, curso: vistaCurso, resultados: vistaResultados, despachos: vistaDespachos };
+      $("vista").replaceChildren(vistas[tab]());
     }
 
     function mostrarLogin() {
