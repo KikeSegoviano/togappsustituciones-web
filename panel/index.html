@@ -90,6 +90,9 @@
     .b-activo { background: #fef3c7; color: #92400e; border-color: #fde68a; }
     .b-logro { background: #dcfce7; color: #166534; border-color: #bbf7d0; }
     .b-fuera { background: #fee2e2; color: #991b1b; border-color: #fecaca; }
+    .b-seg { background: #f3e8ff; color: #6b21a8; border-color: #e9d5ff; }
+    details.respuesta { border: 1px solid var(--borde); border-radius: 8px; padding: 0.45rem 0.7rem; margin: 0.35rem 0; background: var(--blanco); }
+    details.respuesta summary { cursor: pointer; font-size: 0.9rem; font-weight: 600; color: var(--tinta); }
     .chip { display: inline-block; font-size: 0.76rem; padding: 0.08rem 0.5rem; border-radius: 6px; background: var(--fondo); border: 1px solid var(--borde); color: var(--texto); white-space: nowrap; }
     .chips { display: flex; flex-wrap: wrap; gap: 0.25rem; }
     .medidor { display: flex; align-items: center; gap: 0.45rem; }
@@ -189,6 +192,7 @@
         <button type="button" role="tab" data-tab="curso">En curso</button>
         <button type="button" role="tab" data-tab="resultados">Resultados</button>
         <button type="button" role="tab" data-tab="despachos">Despachos</button>
+        <button type="button" role="tab" data-tab="contenido">Contenido</button>
       </nav>
       <div id="vista"></div>
     </section>
@@ -244,11 +248,17 @@
   <div id="toast" role="status"></div>
   <div id="tip" role="tooltip" hidden></div>
 
+  <script src="plantillas.js"></script>
+  <script src="contenido.js"></script>
   <script>
     // Panel del piloto LinkedIn. Habla solo con Supabase (Auth + RPC panel_datos / panel_accion).
     // La clave de abajo es la publicable: la seguridad está en el login + allowlist + RLS
     // (supabase/migrations/0008_panel.sql). Nada de innerHTML: los nombres de despacho vienen
     // de fuentes externas y se pintan siempre como texto.
+    // Los textos que se envían (seguimiento, respuestas rápidas) salen de plantillas.js y las
+    // publicaciones de la semana de contenido.js; si no cargan, el panel sigue funcionando sin ellos.
+    const PL = window.PLANTILLAS || { SEGMENTOS: {}, VARIANTES: {}, motivo: () => null, respuestas: () => [], seguimiento: () => null };
+    const CONTENIDO = window.CONTENIDO || [];
     const SB = "https://mkfywollbqgrcbkqmsbw.supabase.co";
     const KEY = "sb_publishable_DhbGJweY0WycbXj6YtzkOg_738er8cV";
     const LS = "togapp_panel_sesion";
@@ -395,6 +405,11 @@
       return el("a", { class: "boton sec", href: lead.linkedin, target: "_blank", rel: "noopener noreferrer", text: "Abrir LinkedIn" });
     }
 
+    // Segmento (solo se señala si no es el despacho pequeño de siempre) y trato de tú/vosotros.
+    const esPrioritario = (o) => !!o.segmento && o.segmento !== "pequeno";
+    const badgeSegmento = (o) => (esPrioritario(o) ? el("span", { class: "badge b-seg", text: PL.SEGMENTOS[o.segmento] || o.segmento }) : null);
+    const tipoDe = (o) => (o.variante_mensaje === "peq-ind-v2" ? "individual" : "equipo");
+
     function cabecera(lead, detalle) {
       const meta = [lead.plaza, lead.score != null ? `${lead.score} pts` : null, detalle].filter(Boolean).join(" · ");
       const titulo = el("h3", { text: lead.despacho || "(sin nombre)" });
@@ -402,17 +417,27 @@
       if (esWeb(lead.web)) {
         linea.append(" · ", el("a", { href: lead.web, target: "_blank", rel: "noopener noreferrer", text: "web" }));
       }
-      return [titulo, linea];
+      const nodos = [titulo, linea];
+      const seg = badgeSegmento(lead);
+      if (seg || lead.contacto) nodos.push(el("p", { class: "info-seg" }, seg, lead.contacto ? `Para: ${lead.contacto}` : ""));
+      const motivo = PL.motivo(lead.segmento, lead.senales);
+      if (motivo) nodos.push(el("p", { class: "nota", text: motivo }));
+      return nodos;
     }
 
     function tarjetaNueva(lead) {
+      const perfil = lead.perfil_persona ? "perfil de persona" : lead.linkedin ? "página de empresa" : "sin perfil localizado";
+      const aviso = lead.perfil_persona ? null
+        : lead.linkedin ? "Es la página del despacho: entra en «Personas», busca al socio o titular y envíale a él la solicitud."
+        : "No tenemos su perfil: busca el despacho en LinkedIn, entra en «Personas» y envía la solicitud a un socio o a quien lleve procesal.";
       return el("article", { class: "tarjeta" },
-        ...cabecera(lead, lead.perfil_persona ? "perfil de persona" : "página de empresa"),
-        lead.perfil_persona ? null : el("p", { class: "aviso", text: "Es la página del despacho: entra en «Personas», busca al socio o titular y envíale a él la solicitud." }),
+        ...cabecera(lead, perfil),
+        aviso ? el("p", { class: "aviso", text: aviso }) : null,
         el("div", { class: "texto-msg", text: lead.nota || "" }),
-        el("p", { class: "nota", text: "Añade su nombre después de «Hola». Si el perfil no es de un abogado del despacho, pulsa «Perfil incorrecto»." }),
+        el("p", { class: "nota", text: `${/^Hola,/.test(lead.nota || "") ? "Añade su nombre después de «Hola»." : "Comprueba que el saludo lleva bien su nombre."} Si el perfil no es de un abogado del despacho, pulsa «Perfil incorrecto».` }),
         el("div", { class: "acciones" },
           enlaceLinkedin(lead),
+          !lead.linkedin && esWeb(lead.web) ? el("a", { class: "boton sec", href: lead.web, target: "_blank", rel: "noopener noreferrer", text: "Abrir su web" }) : null,
           btn("Copiar nota", "sec", () => copiar(lead.nota || "", "Nota")),
         ),
         el("div", { class: "acciones" },
@@ -427,7 +452,7 @@
       return el("article", { class: "tarjeta" },
         ...cabecera(lead, `aceptó ${hace(lead.aceptada)}`),
         el("div", { class: "texto-msg", text: lead.mensaje || "" }),
-        el("p", { class: "nota", text: "Puedes añadir su nombre después de «Gracias por aceptar»." }),
+        /^Gracias por aceptar\./.test(lead.mensaje || "") ? el("p", { class: "nota", text: "Puedes añadir su nombre después de «Gracias por aceptar»." }) : null,
         infoLead(lead),
         el("div", { class: "acciones" },
           enlaceLinkedin(lead),
@@ -444,6 +469,11 @@
     function noInteresa(lead, b) {
       if (confirm(`¿Marcar «${lead.despacho}» como no interesado? No se le volverá a contactar.`)) accion(lead, "no_interesa", b);
     }
+    // Hitos del producto: se marcan cuando la persona lo dice en la conversación.
+    function marcarPublico(lead, b) {
+      if (confirm(`¿«${lead.despacho}» te ha dicho que ya ha publicado su primera vista en TogApp?`)) return accion(lead, "publico", b);
+      return Promise.resolve(false);
+    }
     function abrirOptin(lead) {
       optinLead = lead;
       $("form-optin").reset();
@@ -454,6 +484,9 @@
     // Seguimiento programado y última nota, para verlos sin abrir la ficha.
     function infoLead(lead) {
       const f = document.createDocumentFragment();
+      if (lead.registrado && !lead.publico) {
+        f.append(el("p", { class: "info-seg" }, el("span", { class: "badge b-logro", text: `Abrió cuenta el ${diaCorto(lead.registrado)}` })));
+      }
       if (lead.seguimiento) {
         const vencido = datos.hoy && lead.seguimiento <= datos.hoy;
         f.append(el("p", { class: "info-seg" },
@@ -478,14 +511,27 @@
       );
     }
 
+    // Texto del único seguimiento suave: solo si envió el primer mensaje, no hubo respuesta y aún
+    // no se le ha hecho ninguno. Después de uno no se insiste.
+    function textoSeguimiento(o) {
+      if (o.stage !== "connected" || !o.mensaje_enviado) return null;
+      if (o.seguimientos_hechos >= 1) return { hecho: true };
+      return PL.seguimiento({ segmento: o.segmento, tipo: tipoDe(o) });
+    }
+
     function tarjetaSeguimiento(lead) {
       const atraso = lead.seguimiento < datos.hoy ? `tocaba el ${diaCorto(lead.seguimiento)}` : "toca hoy";
+      const seg = textoSeguimiento(lead);
       return el("article", { class: "tarjeta" },
         ...cabecera(lead, atraso),
         el("div", { class: "texto-msg", text: lead.seguimiento_nota || "Seguimiento pendiente" }),
+        seg && seg.hecho ? el("p", { class: "aviso", text: "Ya le enviaste un seguimiento: no insistas más." }) : null,
+        seg && seg.texto ? el("div", { class: "texto-msg", text: seg.texto }) : null,
         lead.ultima_nota ? el("p", { class: "ultima-nota" }, lead.ultima_nota.texto, " ",
           el("small", { text: `— ${lead.ultima_nota.autor}, ${diaCorto(lead.ultima_nota.fecha)}` })) : null,
-        el("div", { class: "acciones" }, enlaceLinkedin(lead), btnFicha(lead)),
+        el("div", { class: "acciones" }, enlaceLinkedin(lead),
+          seg && seg.texto ? btn("Copiar seguimiento", "sec", () => copiar(seg.texto, "Seguimiento")) : null,
+          btnFicha(lead)),
         el("div", { class: "acciones" },
           btn("Hecho", "", (b) => seguimiento(lead, null, null, true, b)),
           btn("Posponer 3 días", "gris", (b) => seguimiento(lead, sumaDias(datos.hoy, 3), lead.seguimiento_nota, false, b)),
@@ -506,6 +552,12 @@
       let estado = `Hoy llevas ${d.enviadas_hoy} de ${d.cap} solicitudes.`;
       if (d.enviadas_hoy >= d.cap) estado += " Tope de hoy alcanzado: mañana más.";
       f.append(el("p", { class: "progreso", text: estado }));
+      const cs = d.cola_segmentos || {};
+      if (cs.recurrente || cs.masivo) {
+        const partes = [["recurrente", "despachos recurrentes"], ["masivo", "de litigación masiva"], ["pequeno", "despachos pequeños"]]
+          .filter(([k]) => cs[k]).map(([k, t]) => `${num(cs[k])} ${t}`);
+        f.append(el("p", { class: "nota", text: `En cola, por este orden: ${partes.join(" · ")}.` }));
+      }
       if (d.seguimientos.length) {
         f.append(seccion("Seguimientos que tocan", d.seguimientos, tarjetaSeguimiento, ""));
       }
@@ -528,16 +580,28 @@
       f.append(seccion("Mensaje enviado, esperando respuesta", d.esperando_respuesta, (l) =>
         tarjetaCurso(l, `mensaje enviado ${hace(l.mensaje_enviado)}`, [
           btn("Respondió", "", (b) => accion(l, "respondio", b)),
+          btn("Abrió cuenta", "sec", (b) => accion(l, "registrado", b)),
           btn("Dio permiso para email", "sec", () => abrirOptin(l)),
           btn("No interesa", "gris", (b) => noInteresa(l, b)),
           btn("Deshacer", "gris", (b) => accion(l, "deshacer", b)),
         ]), "Nadie esperando respuesta."));
       f.append(seccion("En conversación", d.en_conversacion, (l) =>
         tarjetaCurso(l, `aceptó ${hace(l.aceptada)}`, [
-          btn("Dio permiso para email", "", () => abrirOptin(l)),
+          btn("Abrió cuenta", "", (b) => accion(l, "registrado", b)),
+          btn("Dio permiso para email", "sec", () => abrirOptin(l)),
           btn("No interesa", "gris", (b) => noInteresa(l, b)),
           btn("Deshacer", "gris", (b) => accion(l, "deshacer", b)),
         ]), "Ninguna conversación abierta."));
+      const reg = d.registrados || [];
+      if (reg.length) {
+        f.append(seccion("Abrieron cuenta: aún no han publicado", reg, (l) =>
+          tarjetaCurso(l, `abrió cuenta ${hace(l.registrado)}`, [
+            btn("Publicó su primera vista", "", (b) => marcarPublico(l, b)),
+            ["connected", "in_conversation"].includes(l.stage) ? btn("Dio permiso para email", "sec", () => abrirOptin(l)) : null,
+            ["connect_sent", "connected", "in_conversation"].includes(l.stage) ? btn("No interesa", "gris", (b) => noInteresa(l, b)) : null,
+            btn("Deshacer «abrió cuenta»", "gris", (b) => accion(l, "deshacer_hito", b)),
+          ]), ""));
+      }
       return f;
     }
 
@@ -548,7 +612,10 @@
       fallo[que] = false;
       try {
         const d = await rpc(que === "metricas" ? "panel_metricas" : "panel_despachos");
-        if (que === "metricas") metricas = d; else despachos = d;
+        if (que === "metricas") {
+          metricas = d;
+          try { metricas.clics = await rpc("panel_clics"); } catch (e) { metricas.clics = []; }
+        } else despachos = d;
       } catch (e) {
         fallo[que] = true;
         toast(e.message);
@@ -695,28 +762,42 @@
     function tablaSegmentos(segmentos) {
       const tabla = el("table", { class: "tabla-num" },
         el("tr", {}, el("th", { text: "Segmento" }), el("th", { text: "Enviadas" }), el("th", { text: "Aceptadas" }),
-          el("th", { text: "% acept." }), el("th", { text: "Respond." }), el("th", { text: "% resp." })));
-      // Dentro de cada grupo, orden con sentido (no alfabético).
-      const ORDEN = ["Perfil de persona", "Página de empresa", "85 o más", "70 a 84", "Menos de 70", "Madrid capital", "Resto de la provincia", "Menciona sus áreas", "Genérica"];
+          el("th", { text: "% acept." }), el("th", { text: "Respond." }), el("th", { text: "% resp." }),
+          el("th", { text: "Cuenta" }), el("th", { text: "Publicó" })));
+      // Dentro de cada grupo, orden con sentido (no alfabético). Segmentos y plantillas llegan
+      // como identificador y se muestran con su nombre.
+      const ORDEN = [...Object.keys(PL.SEGMENTOS), "Perfil de persona", "Página de empresa", "Sin perfil localizado",
+        "85 o más", "70 a 84", "Menos de 70", "Sin puntuar", "Madrid capital", "Resto de la provincia", "Fuera de Madrid",
+        ...Object.keys(PL.VARIANTES)];
+      const nombre = (s) => PL.SEGMENTOS[s] || PL.VARIANTES[s] || s;
       const grupos = [...new Set(segmentos.map((s) => s.grupo))];
       segmentos = [...segmentos].sort((a, b) => grupos.indexOf(a.grupo) - grupos.indexOf(b.grupo) || ORDEN.indexOf(a.segmento) - ORDEN.indexOf(b.segmento));
       let grupo = null;
       for (const s of segmentos) {
+        const mensaje = s.grupo === "Primer mensaje";
         if (s.grupo !== grupo) {
           grupo = s.grupo;
-          tabla.append(el("tr", { class: "grupo" }, el("td", { colspan: "6", text: grupo })));
+          tabla.append(el("tr", { class: "grupo" }, el("td", { colspan: "8", text: mensaje ? `${grupo} (sobre los mensajes enviados)` : grupo })));
         }
-        tabla.append(el("tr", {}, el("td", { text: s.segmento }), el("td", { text: num(s.enviadas) }), el("td", { text: num(s.aceptadas) }),
-          el("td", { text: pct(s.aceptadas, s.enviadas) }), el("td", { text: num(s.respondieron) }), el("td", { text: pct(s.respondieron, s.enviadas) })));
+        tabla.append(el("tr", {}, el("td", { text: nombre(s.segmento) }), el("td", { text: num(s.enviadas) }),
+          el("td", { text: mensaje ? "–" : num(s.aceptadas) }), el("td", { text: mensaje ? "–" : pct(s.aceptadas, s.enviadas) }),
+          el("td", { text: num(s.respondieron) }), el("td", { text: pct(s.respondieron, s.enviadas) }),
+          el("td", { text: num(s.registrados) }), el("td", { text: num(s.publicaron) })));
       }
       return el("section", { class: "grafico" },
         el("h3", { text: "¿Qué funciona mejor?" }),
-        el("p", { class: "sub", text: "Aceptación y respuesta según el tipo de contacto. Con pocas solicitudes las diferencias no son fiables: espera a tener unas 30 por fila antes de sacar conclusiones." }),
+        el("p", { class: "sub", text: "Aceptación, respuesta, cuentas abiertas y primeras vistas publicadas según el tipo de contacto y el texto enviado. Con pocas solicitudes las diferencias no son fiables: espera a tener unas 30 por fila antes de sacar conclusiones." }),
         el("div", { class: "desliza" }, tabla));
     }
 
     const AREAS = { extranjeria: "extranjería", proteccion_datos: "protección de datos", propiedad_intelectual: "propiedad intelectual" };
     const nombreArea = (a) => { const t = AREAS[a] || a; return t.charAt(0).toUpperCase() + t.slice(1); };
+
+    const CAMPANAS = { "li-respuesta": "Enlaces de las respuestas rápidas", "landing-despachos": "Landing: bloque para despachos", "landing-registro": "Landing: registro de abogados", guia: "Guía: enlaces a TogApp" };
+    function nombreCampana(slug) {
+      const post = CONTENIDO.find((p) => p.campana === slug);
+      return post ? `Publicación «${post.titulo}»` : CAMPANAS[slug] || slug;
+    }
 
     function vistaResultados() {
       const r = datos.resultados, f = document.createDocumentFragment();
@@ -725,6 +806,8 @@
         [r.enviadas ? `${num(r.aceptadas)} (${pct(r.aceptadas, r.enviadas)})` : "0", "Aceptadas"],
         [num(r.mensajes), "Primeros mensajes enviados"],
         [num(r.en_conversacion), "En conversación ahora"],
+        [num(r.registrados), "Abrieron cuenta"],
+        [num(r.publicaron), "Publicaron su primera vista"],
         [num(r.optins), "Permisos de email"],
         [num(r.no_interesa), "No interesados"],
         [num(r.perfiles_incorrectos), "Perfiles incorrectos"],
@@ -741,15 +824,22 @@
       }
       const de = (n) => (c.enviadas ? `${pct(n, c.enviadas)} de las enviadas` : "");
       f.append(el("h2", { text: "Contacto por LinkedIn" }));
-      f.append(graficoBarras("Embudo de contacto", "De la solicitud al permiso para escribirles por email.", [
+      f.append(graficoBarras("Embudo de contacto", "De la solicitud a la primera vista publicada en TogApp. «Abrieron cuenta» y «Publicaron» se marcan cuando la persona lo dice en la conversación.", [
         { nombre: "Solicitudes enviadas", n: c.enviadas },
         { nombre: "Aceptaron", n: c.aceptadas, extra: de(c.aceptadas) },
         { nombre: "Primer mensaje enviado", n: c.mensajes, extra: de(c.mensajes) },
         { nombre: "Respondieron", n: c.respondieron, extra: de(c.respondieron) },
+        { nombre: "Abrieron cuenta", n: c.registrados || 0, extra: de(c.registrados || 0) },
+        { nombre: "Publicaron su primera vista", n: c.publicaron || 0, extra: de(c.publicaron || 0) },
         { nombre: "Dieron permiso de email", n: c.optins, extra: de(c.optins) },
       ]));
       f.append(graficoSemanal(metricas.semanal));
       f.append(tablaSegmentos(metricas.segmentos));
+      const clics = metricas.clics || [];
+      if (clics.length) {
+        f.append(graficoBarras("Clics en los enlaces", "Últimas 8 semanas, por campaña. Son clics, no personas: no se guarda quién pulsa.",
+          clics.map((k) => ({ nombre: nombreCampana(k.campana), n: k.n }))));
+      }
 
       const deTotal = (n) => `${pct(n, e.despachos)} del total`;
       f.append(el("h2", { text: "La base de datos" }));
@@ -758,7 +848,8 @@
         { nombre: "Con página web", n: e.con_web, extra: deTotal(e.con_web) },
         { nombre: "Con algún contacto", n: e.con_contacto, extra: deTotal(e.con_contacto) },
         { nombre: "Con LinkedIn", n: e.con_linkedin, extra: deTotal(e.con_linkedin) },
-        { nombre: "Listos para contactar (50 puntos o más)", n: e.contactables, extra: deTotal(e.contactables) },
+        { nombre: "Listos para contactar (50 puntos o más, o elegidos a mano)", n: e.contactables, extra: deTotal(e.contactables) },
+        { nombre: "Clasificados como despacho recurrente", n: e.recurrentes || 0, extra: deTotal(e.recurrentes || 0) },
       ]));
       f.append(graficoBarras("Puntuación de los contactos", "Cuántos contactos hay en cada tramo (de 0 a 100).", metricas.scores));
       const otras = metricas.plazas.filter((p) => p.nombre === "Otras plazas");
@@ -776,10 +867,13 @@
       return /linkedin\.com\/in\//i.test(d.linkedin) ? "Perfil de persona" : "Página de empresa";
     }
     function estadoDe(d) {
+      if (d.publico) return "Publicó";
+      if (d.registrado && !["lost", "suppressed"].includes(d.stage)) return "Abrió cuenta";
       switch (d.stage) {
         case null: case undefined: return d.web ? "Sin contacto encontrado" : "Sin página web";
         case "qualified":
           if (d.marcado) return "Perfil incorrecto";
+          if (d.manual) return "En cola";
           if (!d.linkedin) return "Sin LinkedIn";
           return d.score < 50 ? "Puntuación baja" : "En cola";
         case "connect_sent": return "Solicitud enviada";
@@ -795,6 +889,7 @@
     const CLASE_ESTADO = {
       "En cola": "b-cola", "Solicitud enviada": "b-activo", "Aceptó": "b-activo", "Mensaje enviado": "b-activo",
       "En conversación": "b-activo", "Permiso de email": "b-logro", "Cliente": "b-logro",
+      "Abrió cuenta": "b-logro", "Publicó": "b-logro",
       "No interesa": "b-fuera", "Baja": "b-fuera", "Perfil incorrecto": "b-fuera",
     };
     const badgeEstado = (estado) => el("span", { class: `badge ${CLASE_ESTADO[estado] || "b-neutro"}`, text: estado });
@@ -828,11 +923,17 @@
     async function abrirFicha(obj) {
       const leadId = obj.lead_id !== undefined ? obj.lead_id : obj.id;
       $("ficha-titulo").textContent = obj.despacho || "(sin nombre)";
-      $("ficha-meta").replaceChildren(...[badgeEstado(estadoDe(obj)), obj.plaza ? chip(obj.plaza) : null,
+      $("ficha-meta").replaceChildren(...[badgeEstado(estadoDe(obj)), badgeSegmento(obj), obj.plaza ? chip(obj.plaza) : null,
         obj.score != null ? chip(`${obj.score} puntos`) : null].filter(Boolean));
       const c = $("ficha-cuerpo");
       c.replaceChildren();
       const titulo = (t) => c.append(el("h3", { text: t }));
+
+      const motivo = PL.motivo(obj.segmento, obj.senales);
+      if (motivo) {
+        titulo("Por qué es objetivo");
+        c.append(el("p", { text: motivo }));
+      }
 
       if (obj.desglose) {
         titulo("Por qué tiene esta puntuación");
@@ -854,7 +955,7 @@
       if (esLinkedin(obj.linkedin)) datosDespacho.append(el("a", { class: "boton sec mini", href: obj.linkedin, target: "_blank", rel: "noopener noreferrer", text: `Abrir LinkedIn (${tipoLinkedin(obj) === "Perfil de persona" ? "persona" : "empresa"})` }));
       if (obj.tiene_email !== undefined && obj.stage) datosDespacho.append(chip(obj.tiene_email ? "Hay email de contacto (solo se usa con permiso)" : "Sin email de contacto"));
       c.append(datosDespacho);
-      const hitos = [["Encontrado", obj.descubierto], ["Solicitud enviada", obj.enviada], ["Aceptó", obj.aceptada], ["Mensaje enviado", obj.mensaje_enviado], ["Respondió", obj.respondio]]
+      const hitos = [["Encontrado", obj.descubierto], ["Solicitud enviada", obj.enviada], ["Aceptó", obj.aceptada], ["Mensaje enviado", obj.mensaje_enviado], ["Respondió", obj.respondio], ["Abrió cuenta", obj.registrado], ["Publicó su primera vista", obj.publico]]
         .filter(([, v]) => v).map(([k, v]) => `${k} el ${diaCorto(v)}`);
       if (hitos.length) c.append(el("p", { class: "nota", style: "margin-top:0.6rem", text: hitos.join(" · ") }));
 
@@ -904,6 +1005,41 @@
           btn("Quitar", "gris mini", async (b) => { if (await seguimiento(lead, null, null, false, b)) repintar(); }));
       }
       nodos.push(acciones);
+      const seg = textoSeguimiento(f);
+      if (seg && seg.hecho) nodos.push(el("p", { class: "aviso", text: "Ya le enviaste un seguimiento: no insistas más." }));
+      if (seg && seg.texto) {
+        nodos.push(el("p", { class: "nota", style: "margin-top:0.6rem", text: "Si no responde, un único mensaje de seguimiento:" }),
+          el("div", { class: "texto-msg", text: seg.texto }),
+          btn("Copiar seguimiento", "sec mini", () => copiar(seg.texto, "Seguimiento")));
+      }
+
+      // Hitos del producto (lo que la persona cuenta en la conversación)
+      const activo = ["connect_sent", "connected", "in_conversation", "opted_in", "nurturing"].includes(f.stage);
+      if (activo || f.registrado || f.publico) {
+        nodos.push(el("h3", { text: "En TogApp" }));
+        nodos.push(el("p", { text: f.publico ? `Publicó su primera vista el ${diaCorto(f.publico)}.`
+          : f.registrado ? `Abrió cuenta el ${diaCorto(f.registrado)}. Aún no ha publicado.`
+          : "Márcalo cuando te diga que ha abierto cuenta o que ha publicado una vista." }));
+        const tras = async (ok) => { if (await ok) repintar(); };
+        nodos.push(el("div", { class: "linea-seg" },
+          activo && !f.registrado ? btn("Abrió cuenta", "sec mini", (b) => tras(accion(lead, "registrado", b))) : null,
+          activo && !f.publico ? btn("Publicó su primera vista", "mini", (b) => tras(marcarPublico({ id: leadId, despacho: $("ficha-titulo").textContent }, b))) : null,
+          f.registrado || f.publico ? btn("Deshacer", "gris mini", (b) => tras(accion(lead, "deshacer_hito", b))) : null));
+      }
+
+      // Respuestas rápidas
+      if (f.stage && f.stage !== "qualified") {
+        const resp = PL.respuestas({ segmento: f.segmento, tipo: tipoDe(f) });
+        if (resp.length) {
+          nodos.push(el("h3", { text: "Respuestas rápidas" }));
+          nodos.push(el("p", { class: "nota", text: "Según lo que te conteste. Adáptala a la conversación antes de enviarla." }));
+          for (const r of resp) {
+            nodos.push(el("details", { class: "respuesta" }, el("summary", { text: r.objecion }),
+              el("div", { class: "texto-msg", text: r.texto }),
+              btn("Copiar respuesta", "sec mini", () => copiar(r.texto, "Respuesta"))));
+          }
+        }
+      }
 
       // Notas
       nodos.push(el("h3", { text: `Notas de la conversación (${f.notas.length})` }));
@@ -934,7 +1070,8 @@
 
       // Mensajes preparados
       if (f.nota || f.mensaje) {
-        const det = el("details", { class: "tabla-alt" }, el("summary", { text: "Ver los mensajes preparados" }));
+        const plantilla = [f.variante_nota, f.variante_mensaje].filter(Boolean).map((v) => PL.VARIANTES[v] || v).join(" / ");
+        const det = el("details", { class: "tabla-alt" }, el("summary", { text: plantilla ? `Ver los mensajes preparados (${plantilla})` : "Ver los mensajes preparados" }));
         if (f.nota) det.append(el("div", { class: "texto-msg", text: f.nota }), btn("Copiar nota", "sec mini", () => copiar(f.nota, "Nota")));
         if (f.mensaje) det.append(el("div", { class: "texto-msg", text: f.mensaje }), btn("Copiar mensaje", "sec mini", () => copiar(f.mensaje, "Mensaje")));
         nodos.push(det);
@@ -946,7 +1083,10 @@
     const PRESETS = [
       ["todos", "Todos", () => true],
       ["cola", "En cola", (d) => estadoDe(d) === "En cola"],
+      ["recurrentes", "Recurrentes", (d) => d.segmento === "recurrente"],
+      ["sinpersona", "Prioritarios sin persona", (d) => esPrioritario(d) && tipoLinkedin(d) !== "Perfil de persona"],
       ["contactados", "Contactados", (d) => !!d.enviada],
+      ["cuenta", "Abrieron cuenta", (d) => !!d.registrado],
       ["seguimiento", "Con seguimiento", (d) => !!d.seguimiento],
       ["notas", "Con notas", (d) => d.n_notas > 0],
       ["sinlinkedin", "Con contacto, sin LinkedIn", (d) => !!d.stage && !d.linkedin],
@@ -955,7 +1095,8 @@
 
     function filaDespacho(d) {
       const dominio = esWeb(d.web) ? d.web.replace(/^https?:\/\/(www\.)?/i, "").split(/[/?]/)[0] : null;
-      const sub = [dominio, d.linkedin ? `LinkedIn de ${tipoLinkedin(d) === "Perfil de persona" ? "persona" : "empresa"}` : null,
+      const sub = [esPrioritario(d) ? (PL.SEGMENTOS[d.segmento] || d.segmento) : null, dominio,
+        d.linkedin ? `LinkedIn de ${tipoLinkedin(d) === "Perfil de persona" ? "persona" : "empresa"}` : null,
         d.n_notas ? `${d.n_notas} nota${d.n_notas > 1 ? "s" : ""}` : null,
         d.seguimiento ? `seguimiento ${diaCorto(d.seguimiento)}` : null].filter(Boolean).join(" · ");
       const areas = (d.areas || []).map(nombreArea);
@@ -1020,17 +1161,44 @@
       return f;
     }
 
+    // ---------- Pestaña Contenido: la publicación de LinkedIn de la semana ----------
+    function vistaContenido() {
+      const f = document.createDocumentFragment();
+      const pasadas = CONTENIDO.filter((p) => p.semana <= datos.hoy).sort((a, b) => b.semana.localeCompare(a.semana));
+      if (!pasadas.length) {
+        f.append(el("p", { class: "vacio", text: "Todavía no hay ninguna publicación preparada." }));
+        return f;
+      }
+      const tarjeta = (p, actual) => {
+        const enlace = p.destino && PL.enlace ? PL.enlace(p.campana, p.destino) : null;
+        return el("article", { class: "tarjeta" },
+          el("h3", { text: p.titulo }),
+          el("p", { class: "meta", text: `Semana del ${diaCorto(p.semana)}` }),
+          el("div", { class: "texto-msg", text: p.texto }),
+          actual ? el("p", { class: "nota", text: "Publícala desde tu perfil personal de LinkedIn. El enlace va en el primer comentario, no en el texto: así llega a más gente." }) : null,
+          el("div", { class: "acciones" },
+            btn("Copiar publicación", actual ? "" : "sec", () => copiar(p.texto, "Publicación")),
+            enlace ? btn("Copiar enlace para el comentario", "sec", () => copiar(enlace, "Enlace")) : null));
+      };
+      f.append(el("h2", { text: "Publicación de esta semana" }), tarjeta(pasadas[0], true));
+      if (pasadas.length > 1) {
+        f.append(el("details", { class: "tabla-alt" }, el("summary", { text: `Publicaciones anteriores (${pasadas.length - 1})` }),
+          ...pasadas.slice(1).map((p) => tarjeta(p, false))));
+      }
+      return f;
+    }
+
     function pintar() {
       const d = datos;
-      const cuenta = { hoy: d.nuevas.length + d.por_mensaje.length + d.seguimientos.length, curso: d.pendientes_aceptacion.length + d.esperando_respuesta.length + d.en_conversacion.length };
-      const nombres = { hoy: "Hoy", curso: "En curso", resultados: "Resultados", despachos: "Despachos" };
+      const cuenta = { hoy: d.nuevas.length + d.por_mensaje.length + d.seguimientos.length, curso: d.pendientes_aceptacion.length + d.esperando_respuesta.length + d.en_conversacion.length + (d.registrados || []).length };
+      const nombres = { hoy: "Hoy", curso: "En curso", resultados: "Resultados", despachos: "Despachos", contenido: "Contenido" };
       for (const b of document.querySelectorAll(".tabs button")) {
         const t = b.dataset.tab;
         b.textContent = cuenta[t] != null ? `${nombres[t]} (${cuenta[t]})` : nombres[t];
         b.setAttribute("aria-selected", String(t === tab));
       }
       tip.hidden = true;
-      const vistas = { hoy: vistaHoy, curso: vistaCurso, resultados: vistaResultados, despachos: vistaDespachos };
+      const vistas = { hoy: vistaHoy, curso: vistaCurso, resultados: vistaResultados, despachos: vistaDespachos, contenido: vistaContenido };
       $("vista").replaceChildren(vistas[tab]());
     }
 

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TogApp</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer">
+  <link rel="stylesheet" href="assets/estilo.css">
+  <noscript><meta http-equiv="refresh" content="0; url=https://togapp.es/"></noscript>
+</head>
+<body>
+  <main class="contenedor">
+    <p style="margin-top:3rem">Te llevamos a TogApp… <a id="seguir" href="https://togapp.es/">Continuar</a></p>
+  </main>
+  <script>
+    // Paso intermedio de los enlaces de captación: cuenta un clic por CAMPAÑA y redirige a
+    // togapp.es. No usa cookies ni almacenamiento y no envía nada que identifique a quien pulsa:
+    // solo la campaña (c) y la clave del destino (d). El destino sale de una lista cerrada, así
+    // que este enlace no puede usarse para redirigir a otro sitio. Si el contador falla o está
+    // apagado, la redirección funciona igual.
+    (function () {
+      var DESTINOS = {
+        inicio: "https://togapp.es/",
+        registro: "https://togapp.es/registro",
+        empresas: "https://togapp.es/empresas",
+        "empresa-nueva": "https://togapp.es/empresa/nueva"
+      };
+      var q = new URLSearchParams(location.search);
+      var c = String(q.get("c") || "").toLowerCase();
+      var d = String(q.get("d") || "");
+      if (!/^[a-z0-9-]{2,40}$/.test(c)) c = "";
+      if (!Object.prototype.hasOwnProperty.call(DESTINOS, d)) d = "inicio";
+      var url = DESTINOS[d];
+      if (c) url += "?utm_source=togappsustituciones&utm_medium=enlace&utm_campaign=" + encodeURIComponent(c);
+      document.getElementById("seguir").href = url;
+      try {
+        if (c && navigator.sendBeacon) {
+          navigator.sendBeacon("https://kikeguilabert.app.n8n.cloud/webhook/clic", new URLSearchParams({ c: c, d: d }));
+        }
+      } catch (e) {}
+      location.replace(url);
+    })();
+  </script>
+</body>
+</html>
