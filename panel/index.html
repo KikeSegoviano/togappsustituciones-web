@@ -1161,29 +1161,63 @@
       return f;
     }
 
-    // ---------- Pestaña Contenido: la publicación de LinkedIn de la semana ----------
+    // ---------- Pestaña Contenido: lo que toca publicar esta semana (calendario en contenido.js) ----------
+    const REDES = { linkedin: "LinkedIn", instagram: "Instagram", youtube: "YouTube" };
+    const PERFILES = { elvira: "perfil de Elvira", empresa: "página de TogApp", ig: "@togappsl", yt: "canal de TogApp" };
+    const FORMATOS = { texto: "Texto", video: "Vídeo", carrusel: "Carrusel", reel: "Reel" };
+    const INSTRUCCIONES = {
+      "linkedin-texto": "Publícala desde tu perfil personal de LinkedIn. El enlace va en el primer comentario, no en el texto: así llega a más gente.",
+      "linkedin-video": "Descarga el vídeo cuadrado y súbelo como vídeo nativo (no como enlace) desde tu perfil. Al subirlo, pulsa «Editar» y añade los subtítulos (.srt) y el texto alternativo. El enlace va en el primer comentario. El 16:9 es para la sección «Destacado» del perfil.",
+      "linkedin-carrusel": "Descarga el PDF y publícalo desde tu perfil con «Añadir documento»; ponle de título el de la pieza. El enlace va en el primer comentario.",
+      "instagram-reel": "Descarga el Reel y prográmalo en Meta Business Suite (Reels → subir vídeo → programar). El único enlace posible es el de la bio.",
+      "youtube-video": "Sube el vídeo 16:9 al canal, añade el .srt como subtítulos en español y pon el enlace medido en la descripción.",
+    };
+    const lunesDe = (iso) => { const d = new Date(`${iso}T12:00:00`); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return d.toISOString().slice(0, 10); };
+
     function vistaContenido() {
       const f = document.createDocumentFragment();
-      const pasadas = CONTENIDO.filter((p) => p.semana <= datos.hoy).sort((a, b) => b.semana.localeCompare(a.semana));
-      if (!pasadas.length) {
+      if (!CONTENIDO.length) {
         f.append(el("p", { class: "vacio", text: "Todavía no hay ninguna publicación preparada." }));
         return f;
       }
+      const hoy = datos.hoy, lunes = lunesDe(hoy);
+      const orden = (a, b) => a.semana.localeCompare(b.semana) || (a.dia === "jueves") - (b.dia === "jueves");
+      const aprobada = (p) => (p.estado || "aprobada") === "aprobada";
+      const estaSemana = CONTENIDO.filter((p) => p.semana === lunes && aprobada(p)).sort(orden);
+      const pendientes = CONTENIDO.filter((p) => !aprobada(p) && p.semana >= lunes).sort(orden);
+      const anteriores = CONTENIDO.filter((p) => p.semana < lunes).sort((a, b) => -orden(a, b));
+      const proximas = CONTENIDO.filter((p) => p.semana > lunes && aprobada(p)).sort(orden);
+
       const tarjeta = (p, actual) => {
+        const red = p.red || "linkedin", perfil = p.perfil || "elvira", formato = p.formato || "texto";
         const enlace = p.destino && PL.enlace ? PL.enlace(p.campana, p.destino) : null;
+        const meta = [`Semana del ${diaCorto(p.semana)}`, p.dia, `${REDES[red] || red} · ${PERFILES[perfil] || perfil}`, FORMATOS[formato] || formato, p.pilar].filter(Boolean).join(" · ");
+        const descargas = (p.descargas || []).map((d) => el("a", { class: "boton sec", href: `../${d.ruta}`, download: "", text: `Descargar: ${d.etiqueta}` }));
         return el("article", { class: "tarjeta" },
-          el("h3", { text: p.titulo }),
-          el("p", { class: "meta", text: `Semana del ${diaCorto(p.semana)}` }),
+          el("h3", {}, el("span", { text: p.titulo }), " ", aprobada(p) ? null : el("span", { class: "badge b-activo", text: "Pendiente de tu OK" })),
+          el("p", { class: "meta", text: meta }),
           el("div", { class: "texto-msg", text: p.texto }),
-          actual ? el("p", { class: "nota", text: "Publícala desde tu perfil personal de LinkedIn. El enlace va en el primer comentario, no en el texto: así llega a más gente." }) : null,
+          actual && INSTRUCCIONES[`${red}-${formato}`] ? el("p", { class: "nota", text: INSTRUCCIONES[`${red}-${formato}`] }) : null,
+          descargas.length ? el("div", { class: "acciones" }, ...descargas) : null,
           el("div", { class: "acciones" },
             btn("Copiar publicación", actual ? "" : "sec", () => copiar(p.texto, "Publicación")),
-            enlace ? btn("Copiar enlace para el comentario", "sec", () => copiar(enlace, "Enlace")) : null));
+            enlace ? btn("Copiar enlace para el comentario", "sec", () => copiar(enlace, "Enlace")) : null,
+            p.alt ? btn("Copiar texto alternativo", "sec", () => copiar(p.alt, "Texto alternativo")) : null));
       };
-      f.append(el("h2", { text: "Publicación de esta semana" }), tarjeta(pasadas[0], true));
-      if (pasadas.length > 1) {
-        f.append(el("details", { class: "tabla-alt" }, el("summary", { text: `Publicaciones anteriores (${pasadas.length - 1})` }),
-          ...pasadas.slice(1).map((p) => tarjeta(p, false))));
+
+      f.append(el("h2", { text: "Esta semana" }));
+      if (estaSemana.length) f.append(...estaSemana.map((p) => tarjeta(p, true)));
+      else f.append(el("p", { class: "vacio", text: "Esta semana no hay ninguna pieza aprobada. Mira las pendientes de tu OK." }));
+      if (pendientes.length) {
+        f.append(el("h2", { text: `Pendientes de tu OK (${pendientes.length})` }),
+          el("p", { class: "nota", text: "Nada de esto se publica hasta que lo apruebes. Revísalo y dilo por el canal habitual: se marcará como aprobada." }),
+          ...pendientes.map((p) => tarjeta(p, false)));
+      }
+      if (proximas.length) {
+        f.append(el("details", { class: "tabla-alt" }, el("summary", { text: `Próximas semanas (${proximas.length})` }), ...proximas.map((p) => tarjeta(p, false))));
+      }
+      if (anteriores.length) {
+        f.append(el("details", { class: "tabla-alt" }, el("summary", { text: `Publicaciones anteriores (${anteriores.length})` }), ...anteriores.map((p) => tarjeta(p, false))));
       }
       return f;
     }
