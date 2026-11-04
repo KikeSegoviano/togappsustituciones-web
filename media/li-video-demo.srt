@@ -1,0 +1,375 @@
+1
+00:00:02,540 --> 00:00:05,300
+Esto es TogApp visto
+desde quien publica.
+
+2
+00:00:05,300 --> 00:00:07,420
+Un juicio de principio a fin:
+
+3
+00:00:07,840 --> 00:00:10,780
+desde que inicio sesión hasta
+que valoro al compañero que lo
+
+4
+00:00:10,780 --> 00:00:11,490
+cubrió.
+
+5
+00:00:14,680 --> 00:00:16,680
+Inicio sesión con mi correo.
+
+6
+00:00:17,180 --> 00:00:18,360
+Ya en la entrada lo dice:
+
+7
+00:00:18,720 --> 00:00:21,850
+colegiación verificada, pago en
+custodia hasta que se realiza
+
+8
+00:00:21,900 --> 00:00:23,960
+el juicio,
+y facturación automática.
+
+9
+00:00:27,120 --> 00:00:28,680
+Este es mi inicio.
+
+10
+00:00:29,320 --> 00:00:30,320
+Dos accesos:
+
+11
+00:00:30,460 --> 00:00:32,540
+buscar juicio o publicar juicio.
+
+12
+00:00:33,060 --> 00:00:34,060
+Hoy publico.
+
+13
+00:00:35,590 --> 00:00:38,030
+Primer paso, los
+datos generales:
+
+14
+00:00:38,510 --> 00:00:40,850
+provincia, partido
+judicial, el órgano,
+
+15
+00:00:41,150 --> 00:00:43,290
+el tipo de procedimiento,
+la fecha y la hora,
+
+16
+00:00:43,290 --> 00:00:44,290
+y los honorarios.
+
+17
+00:00:44,590 --> 00:00:45,590
+Los fijo yo.
+
+18
+00:00:47,460 --> 00:00:49,380
+Segundo paso, el detalle:
+
+19
+00:00:49,940 --> 00:00:52,800
+si es del turno de oficio,
+la dificultad que le calculo,
+
+20
+00:00:53,060 --> 00:00:55,240
+mi referencia interna,
+que solo veo yo,
+
+21
+00:00:56,040 --> 00:00:57,800
+y lo que necesita
+saber quien venga:
+
+22
+00:00:58,360 --> 00:01:00,640
+hechos, contraparte,
+particularidades.
+
+23
+00:01:03,280 --> 00:01:05,340
+Tercer paso, la documentación.
+
+24
+00:01:05,340 --> 00:01:08,240
+Subo la instructa y el
+señalamiento en PDF.
+
+25
+00:01:08,860 --> 00:01:11,720
+Podría publicar sin adjuntar
+nada y subirlo después,
+
+26
+00:01:12,100 --> 00:01:13,800
+pero cuanto antes lo
+tenga el sustituto,
+
+27
+00:01:14,060 --> 00:01:14,670
+mejor.
+
+28
+00:01:17,090 --> 00:01:18,390
+Reviso el resumen.
+
+29
+00:01:18,890 --> 00:01:20,230
+El título se ha generado solo.
+
+30
+00:01:20,230 --> 00:01:21,470
+Y publico.
+
+31
+00:01:24,080 --> 00:01:25,080
+Publicado.
+
+32
+00:01:25,580 --> 00:01:29,280
+Y si encima publicas con documentos
+y con los detalles completos,
+
+33
+00:01:29,400 --> 00:01:30,400
+ganas togas.
+
+34
+00:01:30,900 --> 00:01:33,500
+Las togas son la reputación
+dentro de TogApp.
+
+35
+00:01:36,140 --> 00:01:38,660
+Pasan unas horas y
+llegan los avisos:
+
+36
+00:01:39,040 --> 00:01:40,520
+nueva postulación a tu juicio.
+
+37
+00:01:40,960 --> 00:01:42,660
+Tres compañeros
+se han postulado.
+
+38
+00:01:45,780 --> 00:01:48,340
+En Candidatos los veo uno a uno:
+
+39
+00:01:48,800 --> 00:01:50,340
+su colegio y número
+de colegiado,
+
+40
+00:01:50,500 --> 00:01:53,680
+su valoración, sus togas y la
+carta con la que se presentan.
+
+41
+00:01:56,190 --> 00:01:57,390
+Abro un perfil:
+
+42
+00:01:57,550 --> 00:02:00,550
+verificado, su experiencia,
+áreas de práctica,
+
+43
+00:02:00,790 --> 00:02:04,290
+zonas de trabajo y las reseñas que
+le han dejado otros compañeros.
+
+44
+00:02:06,580 --> 00:02:09,140
+Antes de decidir,
+le escribo por el chat.
+
+45
+00:02:09,820 --> 00:02:12,400
+Le pregunto si lleva audiencias
+previas en ese juzgado.
+
+46
+00:02:12,400 --> 00:02:13,480
+Y me contesta.
+
+47
+00:02:15,830 --> 00:02:16,870
+Me decido:
+
+48
+00:02:16,870 --> 00:02:18,130
+elegir y pagar.
+
+49
+00:02:18,790 --> 00:02:22,250
+Honorarios, IVA, retención de
+IRPF y el total a cargar en mi
+
+50
+00:02:22,250 --> 00:02:22,840
+tarjeta.
+
+51
+00:02:22,890 --> 00:02:24,010
+Continúo con el pago.
+
+52
+00:02:26,230 --> 00:02:27,390
+Pago retenido.
+
+53
+00:02:27,870 --> 00:02:30,550
+El importe se queda en TogApp
+hasta que el sustituto marque
+
+54
+00:02:30,550 --> 00:02:31,850
+el juicio como realizado.
+
+55
+00:02:32,410 --> 00:02:33,810
+El match queda confirmado:
+
+56
+00:02:34,290 --> 00:02:38,030
+ya tengo su contacto y el chat,
+y en Mis juicios pasa a Confirmados.
+
+57
+00:02:40,380 --> 00:02:41,920
+Llega el día del juicio.
+
+58
+00:02:42,380 --> 00:02:44,700
+En Mis juicios pasa a
+Pendiente de resolución:
+
+59
+00:02:45,180 --> 00:02:48,320
+el juicio ya se ha celebrado y
+falta que el sustituto lo marque
+
+60
+00:02:48,320 --> 00:02:49,320
+como realizado.
+
+61
+00:02:52,270 --> 00:02:55,590
+Lo marca, con sus notas y
+las evidencias que adjunta.
+
+62
+00:02:56,250 --> 00:02:58,010
+El juicio pasa a
+Pendiente de pago,
+
+63
+00:02:58,010 --> 00:02:59,310
+y me llega su reporte:
+
+64
+00:02:59,670 --> 00:03:02,030
+lo descargo en PDF,
+con los datos del juicio,
+
+65
+00:03:02,150 --> 00:03:04,610
+las partes, sus
+notas y los adjuntos.
+
+66
+00:03:06,450 --> 00:03:09,390
+Tengo 48 horas hábiles
+para revisarlo.
+
+67
+00:03:09,890 --> 00:03:11,890
+Si todo está correcto,
+libero el pago.
+
+68
+00:03:12,350 --> 00:03:15,170
+Si no hago nada, se libera
+solo al cumplirse el plazo.
+
+69
+00:03:15,550 --> 00:03:17,710
+Y si hubo un problema,
+abro una incidencia.
+
+70
+00:03:20,350 --> 00:03:21,430
+Finalizado.
+
+71
+00:03:21,770 --> 00:03:25,070
+El sustituto cobra, y la factura
+de honorarios llega automática,
+
+72
+00:03:25,370 --> 00:03:26,870
+con los impuestos desglosados.
+
+73
+00:03:29,730 --> 00:03:31,310
+Ahora puedo valorarle:
+
+74
+00:03:31,850 --> 00:03:34,130
+de una a cinco estrellas
+y un comentario.
+
+75
+00:03:34,670 --> 00:03:35,670
+Es doble ciego:
+
+76
+00:03:35,770 --> 00:03:38,590
+ninguno ve la reseña del otro
+hasta que se publican las dos.
+
+77
+00:03:40,750 --> 00:03:43,130
+Y por dejar la
+reseña, más togas.
+
+78
+00:03:43,630 --> 00:03:46,850
+En Togas veo mi nivel,
+el historial y lo que me falta para
+
+79
+00:03:46,850 --> 00:03:47,580
+el siguiente.
+
+80
+00:03:49,710 --> 00:03:51,950
+Un juicio entero
+sin una llamada,
+
+81
+00:03:52,330 --> 00:03:54,850
+ahorrando tiempo y
+sabiendo a quién contratas.
+
+82
+00:03:55,210 --> 00:03:56,410
+Publicar es gratis.
+
+83
+00:03:56,890 --> 00:03:58,050
+Publica hoy tu juicio.

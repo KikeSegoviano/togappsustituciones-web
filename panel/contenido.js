@@ -282,6 +282,52 @@ No es desconfianza. Es quitarle el «casi» a la confianza.
 
 #abogacía #sustitucionesjudiciales #despachos`,
     },
+    // ---- Semana del 16 de noviembre: demo completa con la voz de Elvira ----
+    {
+      semana: "2026-11-16",
+      dia: "martes",
+      titulo: "Un juicio de principio a fin — TogApp visto desde quien publica",
+      pilar: "Así funciona",
+      formato: "video",
+      campana: "li-video-demo",
+      destino: "empresas",
+      estado: "borrador",
+      descargas: [
+        { etiqueta: "Vídeo para el post y el destacado (16:9)", ruta: "media/li-video-demo-ancho.mp4" },
+        { etiqueta: "Subtítulos (.srt)", ruta: "media/li-video-demo.srt" },
+      ],
+      alt: "Demostración de TogApp en pantalla de ordenador desde el punto de vista de quien publica un juicio: inicio de sesión, publicación en cuatro pasos con documentación, notificaciones de postulaciones, candidatos con colegiación verificada, perfil, chat, elegir y pagar con el importe retenido, estados confirmado, pendiente de resolución y pendiente de pago, reporte en PDF, liberación del pago, juicio finalizado, reseña y togas.",
+      texto: `Un juicio de principio a fin, visto desde quien lo publica.
+
+Lo hemos grabado entero: publicar con la instructa y el señalamiento, recibir las postulaciones, mirar perfiles y reseñas, preguntar por el chat, elegir y pagar con el importe retenido en custodia, el reporte en PDF que deja el sustituto al marcar el juicio como realizado, liberar el pago, la factura, la reseña a doble ciego y las togas.
+
+Publicar es gratis.
+
+Si lleváis señalamientos fuera de vuestra plaza cada semana: ¿qué parte de esto os quita más tiempo hoy?
+
+#abogacía #sustitucionesjudiciales #despachos #procesal`,
+    },
+    {
+      semana: "2026-11-16",
+      dia: "martes",
+      red: "youtube",
+      perfil: "yt",
+      titulo: "YouTube: Un juicio de principio a fin — TogApp visto desde quien publica",
+      formato: "video",
+      campana: "yt-demo",
+      destino: "empresas",
+      estado: "borrador",
+      descargas: [
+        { etiqueta: "Vídeo (16:9)", ruta: "media/li-video-demo-ancho.mp4" },
+        { etiqueta: "Subtítulos (.srt)", ruta: "media/li-video-demo.srt" },
+      ],
+      alt: "Demostración completa de TogApp desde el punto de vista de quien publica un juicio: publicar, candidatos, chat, pago retenido, estados del juicio, reporte en PDF, liberación del pago, reseña y togas.",
+      texto: `Demostración completa de TogApp, el marketplace de sustituciones judiciales entre abogados colegiados, vista desde quien publica un juicio.
+
+Publicar en cuatro pasos (datos, detalle, documentación con la instructa y el señalamiento, revisar), las notificaciones de postulación, los candidatos con colegiación verificada, el perfil y el chat, elegir y pagar con el importe retenido hasta que el sustituto marca el juicio como realizado, el reporte en PDF, la liberación del pago, la factura de honorarios, la reseña a doble ciego y las togas.
+
+Publicar es gratis. Sin cuota de alta ni mensualidad.`,
+    },
   ];
 
   if (typeof module === "object" && module && module.exports) module.exports = CONTENIDO;
