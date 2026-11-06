@@ -1,0 +1,262 @@
+1
+00:00:01,500 --> 00:00:04,480
+Esto es TogApp visto
+desde quien sustituye.
+
+2
+00:00:04,940 --> 00:00:06,560
+Un juicio de principio a fin:
+
+3
+00:00:06,820 --> 00:00:09,600
+desde que busco un señalamiento
+hasta que cobro y valoro al
+
+4
+00:00:09,600 --> 00:00:10,860
+compañero que lo publicó.
+
+5
+00:00:12,260 --> 00:00:13,560
+Inicio sesión.
+
+6
+00:00:13,800 --> 00:00:15,540
+Aquí solo entran
+abogados colegiados:
+
+7
+00:00:16,120 --> 00:00:19,280
+la colegiación se verifica antes
+de poder postularse a nada.
+
+8
+00:00:20,680 --> 00:00:23,700
+Antes de nada, mis zonas
+y mis especialidades:
+
+9
+00:00:24,420 --> 00:00:27,280
+deciden dónde aparezco
+como candidato recomendado.
+
+10
+00:00:27,280 --> 00:00:30,890
+Y las alertas me avisan por
+correo cuando se publica un juicio
+
+11
+00:00:30,940 --> 00:00:31,940
+que encaja.
+
+12
+00:00:35,160 --> 00:00:36,480
+Buscar juicio.
+
+13
+00:00:37,260 --> 00:00:39,740
+Filtro por zona,
+especialidad y fecha,
+
+14
+00:00:39,740 --> 00:00:41,160
+y veo lo que hay publicado:
+
+15
+00:00:41,820 --> 00:00:44,300
+la fecha, el juzgado y los
+honorarios de cada uno.
+
+16
+00:00:45,700 --> 00:00:46,700
+Abro uno:
+
+17
+00:00:47,240 --> 00:00:50,060
+audiencia previa en Alcalá,
+los honorarios ya fijados,
+
+18
+00:00:50,060 --> 00:00:52,420
+y la instructa y el
+señalamiento adjuntos.
+
+19
+00:00:52,420 --> 00:00:54,820
+Sé a qué voy antes
+de decir que sí.
+
+20
+00:00:58,420 --> 00:01:01,400
+Me postulo con una carta
+de presentación corta.
+
+21
+00:01:01,840 --> 00:01:03,140
+Postularse es gratis:
+
+22
+00:01:03,320 --> 00:01:04,860
+solo cobro si me confirman.
+
+23
+00:01:06,278 --> 00:01:09,538
+En Mis postulaciones veo en
+qué estado está cada una.
+
+24
+00:01:11,341 --> 00:01:14,501
+Quien publica me escribe por
+el chat antes de decidir.
+
+25
+00:01:15,081 --> 00:01:18,001
+Le contesto desde aquí, sin dar
+mi teléfono a nadie todavía.
+
+26
+00:01:22,373 --> 00:01:23,393
+Me eligen.
+
+27
+00:01:24,013 --> 00:01:27,053
+El importe ya está cargado y en
+custodia antes de que yo entre
+
+28
+00:01:27,053 --> 00:01:27,443
+en sala.
+
+29
+00:01:27,493 --> 00:01:28,633
+Y ahora sí:
+
+30
+00:01:28,633 --> 00:01:31,553
+tengo su contacto, el chat
+y toda la documentación.
+
+31
+00:01:32,603 --> 00:01:34,883
+En Mis juicios
+pasa a Confirmados,
+
+32
+00:01:35,183 --> 00:01:36,383
+con la fecha y el juzgado.
+
+33
+00:01:37,083 --> 00:01:38,083
+Ya está en mi agenda.
+
+34
+00:01:41,133 --> 00:01:44,073
+El día del juicio lo
+celebro y, al salir,
+
+35
+00:01:44,073 --> 00:01:45,633
+lo marco como realizado:
+
+36
+00:01:46,233 --> 00:01:48,273
+mis notas y
+documentación en PDF.
+
+37
+00:01:49,153 --> 00:01:51,333
+Ese es el reporte que
+recibe quien lo publicó.
+
+38
+00:01:52,623 --> 00:01:54,803
+El juicio pasa a
+Pendiente de pago.
+
+39
+00:01:55,143 --> 00:01:58,903
+Con su conformidad, o a las 48
+horas hábiles sin incidencia,
+
+40
+00:01:59,143 --> 00:02:00,183
+el pago se libera solo.
+
+41
+00:02:03,783 --> 00:02:04,783
+Cobro.
+
+42
+00:02:05,043 --> 00:02:08,423
+Los honorarios, con los impuestos
+correspondientes y la comisión
+
+43
+00:02:08,423 --> 00:02:10,303
+fija de la plataforma
+descontadas.
+
+44
+00:02:10,823 --> 00:02:12,443
+Y veo dónde está cada euro.
+
+45
+00:02:13,843 --> 00:02:16,303
+La factura de honorarios
+sale automática,
+
+46
+00:02:16,943 --> 00:02:18,743
+con los impuestos desglosados.
+
+47
+00:02:19,303 --> 00:02:20,423
+Sin perseguir a nadie.
+
+48
+00:02:21,473 --> 00:02:23,433
+Valoro al compañero que publicó.
+
+49
+00:02:23,973 --> 00:02:24,973
+Es doble ciego:
+
+50
+00:02:25,053 --> 00:02:27,913
+ninguno ve la reseña del otro
+hasta que se publican las dos.
+
+51
+00:02:29,450 --> 00:02:30,650
+Y gano togas:
+
+52
+00:02:30,930 --> 00:02:34,370
+mi credencial en TogApp, la que
+ve quien publica cuando abre
+
+53
+00:02:34,370 --> 00:02:35,370
+mi perfil.
+
+54
+00:02:36,040 --> 00:02:38,120
+Un juicio entero sin
+perseguir a nadie:
+
+55
+00:02:38,620 --> 00:02:41,750
+sabes a qué vas, el pago está
+en custodia antes de entrar y
+
+56
+00:02:41,800 --> 00:02:43,260
+la factura sale automática.
+
+57
+00:02:43,860 --> 00:02:45,400
+Postularse es gratis.
+
+58
+00:02:45,760 --> 00:02:47,300
+Busca hoy tu primer juicio.

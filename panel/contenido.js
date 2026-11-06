@@ -307,6 +307,31 @@ Si lleváis señalamientos fuera de vuestra plaza cada semana: ¿qué parte de e
 
 #abogacía #sustitucionesjudiciales #despachos #procesal`,
     },
+    // ---- Semana del 30 de noviembre: la misma demo desde quien sustituye (voz de Elvira) ----
+    {
+      semana: "2026-11-30",
+      dia: "martes",
+      titulo: "Un juicio de principio a fin — TogApp visto desde quien sustituye",
+      pilar: "Así funciona",
+      formato: "video",
+      campana: "li-video-demo-sustituto",
+      destino: "registro",
+      estado: "borrador",
+      descargas: [
+        { etiqueta: "Vídeo para el post y el destacado (16:9)", ruta: "media/li-video-demo-sustituto-ancho.mp4" },
+        { etiqueta: "Subtítulos (.srt)", ruta: "media/li-video-demo-sustituto.srt" },
+      ],
+      alt: "Demostración de TogApp en pantalla de ordenador desde el punto de vista de quien sustituye: inicio de sesión, zonas y alertas, búsqueda de juicios publicados, detalle con la documentación, postulación gratuita, chat, match confirmado con el pago en custodia, marcar el juicio como realizado con el reporte, cobro con el desglose, factura automática, reseña y togas.",
+      texto: `Un juicio de principio a fin, visto desde quien lo sustituye.
+
+Lo hemos grabado entero desde el otro lado: buscar lo que hay publicado, abrir el juicio con la instructa y el señalamiento ya adjuntos, postularse gratis con una carta, el chat con quien publica, el match con el pago ya en custodia antes de entrar en sala, marcar el juicio como realizado con las notas y el acta, cobrar con la factura hecha sola, la reseña a doble ciego y las togas.
+
+Postularse es gratis.
+
+Si cubres señalamientos para otros compañeros: ¿qué parte de esto te quita más tiempo hoy?
+
+#abogacía #sustitucionesjudiciales #procesal #abogados`,
+    },
     {
       semana: "2026-11-16",
       dia: "martes",
