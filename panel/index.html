@@ -425,6 +425,41 @@
       return nodos;
     }
 
+    // Paso previo a la solicitud: que el despacho vea a Elvira antes de recibirla.
+    function pasoPrevio(lead) {
+      if (!lead.perfil_persona || !esLinkedin(lead.pagina_empresa)) return null;
+      return el("p", { class: "nota" }, "Antes de enviarla: sigue la página del despacho y reacciona a una publicación reciente. ",
+        el("a", { href: lead.pagina_empresa, target: "_blank", rel: "noopener noreferrer", text: "Abrir la página del despacho" }));
+    }
+
+    // La misma nota con el nombre de otra persona (si no cabe en el límite, sin nombre).
+    function notaPara(nota, nombre) {
+      const pila = String(nombre || "").trim().split(/\s+/)[0] || "";
+      const sin = String(nota || "").replace(/^Hola(?: [^,]{1,40})?,/, "Hola,");
+      const con = pila ? sin.replace(/^Hola,/, `Hola ${pila},`) : sin;
+      return con.length <= PL.NOTA_MAX ? con : sin;
+    }
+
+    // Segunda persona del mismo despacho cuando la primera no ha aceptado en 10 días.
+    function tarjetaSegunda(lead) {
+      const otra = Object.assign({}, lead, { contacto: lead.segunda.contacto, linkedin: lead.segunda.linkedin, perfil_persona: true });
+      const nota = notaPara(lead.nota, lead.segunda.contacto);
+      return el("article", { class: "tarjeta" },
+        ...cabecera(otra, `primera solicitud ${hace(lead.enviada)}, sin aceptar`),
+        el("p", { class: "aviso", text: `${lead.contacto || "La primera persona"} no ha aceptado. Envía la solicitud a esta otra persona del mismo despacho.` }),
+        pasoPrevio(otra),
+        el("div", { class: "texto-msg", text: nota }),
+        el("p", { class: "nota", text: "Comprueba que el saludo lleva bien su nombre." }),
+        el("div", { class: "acciones" },
+          enlaceLinkedin(otra),
+          btn("Copiar nota", "sec", () => copiar(nota, "Nota")),
+        ),
+        el("div", { class: "acciones" },
+          btn("Solicitud enviada", "", (b) => accion(lead, "segunda_enviada", b)),
+        ),
+      );
+    }
+
     function tarjetaNueva(lead) {
       const perfil = lead.perfil_persona ? "perfil de persona" : lead.linkedin ? "página de empresa" : "sin perfil localizado";
       const aviso = lead.perfil_persona ? null
@@ -433,6 +468,7 @@
       return el("article", { class: "tarjeta" },
         ...cabecera(lead, perfil),
         aviso ? el("p", { class: "aviso", text: aviso }) : null,
+        pasoPrevio(lead),
         el("div", { class: "texto-msg", text: lead.nota || "" }),
         el("p", { class: "nota", text: `${/^Hola,/.test(lead.nota || "") ? "Añade su nombre después de «Hola»." : "Comprueba que el saludo lleva bien su nombre."} Si el perfil no es de un abogado del despacho, pulsa «Perfil incorrecto».` }),
         el("div", { class: "acciones" },
@@ -564,6 +600,9 @@
       if (d.por_mensaje.length) {
         f.append(seccion("Han aceptado: envíales el primer mensaje", d.por_mensaje, tarjetaMensaje, ""));
       }
+      if ((d.segundas || []).length) {
+        f.append(seccion("Sin aceptar tras 10 días: prueba con otra persona", d.segundas, tarjetaSegunda, ""));
+      }
       f.append(seccion("Solicitudes nuevas", d.nuevas, tarjetaNueva,
         d.enviadas_hoy >= d.cap ? "Ya has enviado las de hoy." : "No quedan contactos en la cola."));
       return f;
@@ -572,10 +611,11 @@
     function vistaCurso() {
       const d = datos, f = document.createDocumentFragment();
       f.append(seccion("Pendientes de aceptación", d.pendientes_aceptacion, (l) =>
-        tarjetaCurso(l, `solicitud enviada ${hace(l.enviada)}`, [
+        tarjetaCurso(l, l.segunda_enviada ? `segunda solicitud enviada ${hace(l.segunda_enviada)}` : `solicitud enviada ${hace(l.enviada)}`, [
           btn("Aceptó", "", (b) => accion(l, "acepto", b)),
           btn("No interesa", "gris", (b) => noInteresa(l, b)),
-          btn("Deshacer envío", "gris", (b) => accion(l, "deshacer", b)),
+          l.segunda_enviada ? btn("Deshacer segunda solicitud", "gris", (b) => accion(l, "deshacer_segunda", b))
+            : btn("Deshacer envío", "gris", (b) => accion(l, "deshacer", b)),
         ]), "Nadie pendiente de aceptar."));
       f.append(seccion("Mensaje enviado, esperando respuesta", d.esperando_respuesta, (l) =>
         tarjetaCurso(l, `mensaje enviado ${hace(l.mensaje_enviado)}`, [
@@ -1224,7 +1264,7 @@
 
     function pintar() {
       const d = datos;
-      const cuenta = { hoy: d.nuevas.length + d.por_mensaje.length + d.seguimientos.length, curso: d.pendientes_aceptacion.length + d.esperando_respuesta.length + d.en_conversacion.length + (d.registrados || []).length };
+      const cuenta = { hoy: d.nuevas.length + (d.segundas || []).length + d.por_mensaje.length + d.seguimientos.length, curso: d.pendientes_aceptacion.length + d.esperando_respuesta.length + d.en_conversacion.length + (d.registrados || []).length };
       const nombres = { hoy: "Hoy", curso: "En curso", resultados: "Resultados", despachos: "Despachos", contenido: "Contenido" };
       for (const b of document.querySelectorAll(".tabs button")) {
         const t = b.dataset.tab;
